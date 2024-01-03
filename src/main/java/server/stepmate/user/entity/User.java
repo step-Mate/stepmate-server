@@ -1,4 +1,4 @@
-package server.stepmate.account.entity;
+package server.stepmate.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
