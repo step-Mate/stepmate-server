@@ -1,9 +1,15 @@
 package server.stepmate.user.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.stepmate.user.entity.enumtypes.RoleType;
 
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "_user")
@@ -18,7 +24,7 @@ public class User {
 
     private String password;
 
-    private String userName;
+    private String nickname;
 
     private Integer age;
 
@@ -26,13 +32,10 @@ public class User {
 
     private Integer weight;
 
-    @Builder
-    public User(String userId, String password, String userName, Integer age, Integer height, Integer weight) {
-        this.userId = userId;
-        this.password = password;
-        this.userName = userName;
-        this.age = age;
-        this.height = height;
-        this.weight = weight;
-    }
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+
+    private String profileImage;
+
+
 }
