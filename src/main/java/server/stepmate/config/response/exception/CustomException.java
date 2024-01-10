@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CustomException {
+public class CustomException extends RuntimeException{
     CustomExceptionStatus customExceptionStatus;
 }
