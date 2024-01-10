@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.user.entity.enumtypes.RoleType;
 
 import java.util.Base64;
@@ -58,18 +59,16 @@ public class JwtTokenProvider {
         return request.getHeader("X-ACCESS-TOKEN");
     }
 
-    public boolean validateToken(String jwtToken) {
+    public boolean validateToken(String jwtToken, HttpServletRequest req) {
         try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 잘못되었습니다.");
+            if (jwtToken.isEmpty()) throw new JwtException("empty jwtToken");
+            Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
+            return claimsJws.getBody().getExpiration().after(new Date());
+        } catch (JwtException e) {
+            if (jwtToken.isEmpty()) {
+                req.setAttribute("exception", CustomExceptionStatus.EMPTY_JWT.getMessage());
+            }
+            else req.setAttribute("exception",CustomExceptionStatus.INVALID_JWT.getMessage());
         }
         return false;
     }
