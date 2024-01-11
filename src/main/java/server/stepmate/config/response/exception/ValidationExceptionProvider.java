@@ -20,8 +20,8 @@ public class ValidationExceptionProvider {
             else if (target.equals("age")) return CustomExceptionStatus.USER_EMPTY_AGE;
             else if (target.equals("height")) return CustomExceptionStatus.USER_EMPTY_HEIGHT;
             else if (target.equals("weight")) return CustomExceptionStatus.USER_EMPTY_WEIGHT;
-        } else if (code.equals("Pattern")) {
-            if(target.equals("userId")) return CustomExceptionStatus.USER_INVALID_ID;
+        } else if (code.equals("Pattern") || code.equals("Length")) {
+            if (target.equals("userId")) return CustomExceptionStatus.USER_INVALID_ID;
             else if (target.equals("password")) return CustomExceptionStatus.USER_INVALID_PASSWORD;
             else if (target.equals("nickname")) return CustomExceptionStatus.USER_INVALID_NICKNAME;
             else if (target.equals("email")) return CustomExceptionStatus.USER_INVALID_EMAIL;
