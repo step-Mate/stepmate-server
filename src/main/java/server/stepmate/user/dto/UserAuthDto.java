@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-/**
- * 회원가입에서 키 나이 성별 다 받아서 할껀지 아니면 나중에 따로 회원정보를 만드는 어떤 것을 할건지 정한다음
- */
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,6 +24,7 @@ public class UserAuthDto {
     private String userId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Length(min = 8, max = 16)
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]{8,16}$")
     private String password;
 
@@ -44,5 +43,7 @@ public class UserAuthDto {
 
     @NotBlank
     private String weight;
+
+    private String jwt;
 
 }
