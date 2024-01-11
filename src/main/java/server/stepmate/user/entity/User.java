@@ -24,6 +24,8 @@ public class User {
 
     private String password;
 
+    private String email;
+
     private String nickname;
 
     private Integer age;
@@ -34,8 +36,6 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
-
-    private String profileImage;
 
 
 }
