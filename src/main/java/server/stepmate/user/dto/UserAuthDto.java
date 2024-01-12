@@ -3,6 +3,7 @@ package server.stepmate.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -35,14 +36,14 @@ public class UserAuthDto {
     @Email
     private String email;
 
-    @NotBlank
-    private String age;
+    @NotEmpty
+    private Integer age;
 
-    @NotBlank
-    private String height;
+    @NotEmpty
+    private Integer height;
 
-    @NotBlank
-    private String weight;
+    @NotEmpty
+    private Integer weight;
 
     private String jwt;
 
