@@ -1,6 +1,7 @@
 package server.stepmate.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,11 @@ import server.stepmate.user.dto.SignInRes;
 import server.stepmate.user.dto.UserAuthDto;
 import server.stepmate.user.entity.User;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Optional;
+
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -67,7 +73,34 @@ public class UserService {
         return userAuthDto;
     }
 
+    public void sendCodeToEmail(String toEmail) {
+        this.checkDuplicatedEmail(toEmail);
+        String title = "Step-Mate 이메일 인증 번호";
+        String authCode = this.createCode();
+        emailService.sendEmail(toEmail,title,authCode);
+    }
 
+    private void checkDuplicatedEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            throw new CustomException(CustomExceptionStatus.USER_EXISTS_EMAIL);
+        }
+    }
 
+    private String createCode() {
+        int length = 6;
+
+        try {
+            SecureRandom random = SecureRandom.getInstanceStrong();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                builder.append(random.nextInt(10));
+            }
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new CustomException(CustomExceptionStatus.NO_SUCH_ALGORITHM);
+        }
+
+    }
 
 }

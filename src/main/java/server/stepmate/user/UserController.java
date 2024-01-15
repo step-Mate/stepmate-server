@@ -12,6 +12,7 @@ import server.stepmate.config.response.ResponseService;
 import server.stepmate.config.response.exception.ValidationExceptionProvider;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.email.EmailService;
+import server.stepmate.user.dto.EmailReq;
 import server.stepmate.user.dto.SignInReq;
 import server.stepmate.user.dto.SignInRes;
 import server.stepmate.user.dto.UserAuthDto;
@@ -43,6 +44,11 @@ public class UserController {
         return responseService.getDataResponse(userService.signUp(userAuthDto));
     }
 
-
+    @GetMapping("/email/verification-request")
+    public CommonResponse requestVerification(@RequestBody @Valid EmailReq req, Errors errors) {
+        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.sendCodeToEmail(req.getEmail());
+        return responseService.getSuccessResponse();
+    }
 
 }
