@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.stepmate.config.redis.RedisService;
 import server.stepmate.config.response.exception.CustomException;
 import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
@@ -17,6 +18,7 @@ import server.stepmate.user.entity.User;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Optional;
 
 @Slf4j
@@ -29,6 +31,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
+    private final RedisService redisService;
 
     @Transactional
     public SignInRes signIn(SignInReq req) {
@@ -78,6 +81,7 @@ public class UserService {
         String title = "Step-Mate 이메일 인증 번호";
         String authCode = this.createCode();
         emailService.sendEmail(toEmail,title,authCode);
+        redisService.setValues(toEmail,authCode, Duration.ofMillis(300000));//5분
     }
     public void checkDuplicatedUserId(String userId) {
         Optional<User> user = userRepository.findByUserId(userId);
@@ -107,6 +111,15 @@ public class UserService {
             throw new CustomException(CustomExceptionStatus.NO_SUCH_ALGORITHM);
         }
 
+    }
+
+    public void verifiedCode(String email, String authCode) {
+        this.checkDuplicatedEmail(email);
+        String redisAuthCode = redisService.getValues(email);
+        boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
+        if (!authResult) {
+            throw new CustomException(CustomExceptionStatus.INVALID_AUTH_CODE);
+        }
     }
 
 

@@ -61,4 +61,11 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "이메일 인증 확인 API", description = "이메일에 발송된 인증코드 검증")
+    @GetMapping("/email/verifications")
+    public CommonResponse verificationEmail(@RequestBody @Valid EmailReq req, Errors errors) {
+        userService.verifiedCode(req.getEmail(), req.getAuthCode());
+        return responseService.getSuccessResponse();
+    }
+
 }

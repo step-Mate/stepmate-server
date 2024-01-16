@@ -14,4 +14,6 @@ public class EmailReq {
     @NotBlank
     @Email
     private String email;
+
+    private String authCode;
 }
