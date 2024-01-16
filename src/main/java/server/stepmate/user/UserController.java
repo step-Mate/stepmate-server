@@ -1,7 +1,6 @@
 package server.stepmate.user;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,8 +63,17 @@ public class UserController {
     @Operation(summary = "이메일 인증 확인 API", description = "이메일에 발송된 인증코드 검증")
     @GetMapping("/email/verifications")
     public CommonResponse verificationEmail(@RequestBody @Valid EmailReq req, Errors errors) {
+        userService.checkDuplicatedEmail(req.getEmail());
         userService.verifiedCode(req.getEmail(), req.getAuthCode());
         return responseService.getSuccessResponse();
+    }
+
+    @Operation(summary = "이메일 인증으로 아이디 찾기 API",description = "이메일 인증을 통해 유저 아이디를 반환")
+    @GetMapping("/email/findId")
+    public DataResponse<UserIdRes> findIdByEmail(@RequestBody @Valid EmailReq req, Errors errors) {
+        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.verifiedCode(req.getEmail(),req.getAuthCode());
+        return responseService.getDataResponse(userService.findByEmail(req.getEmail()));
     }
 
 }

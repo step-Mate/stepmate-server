@@ -14,6 +14,7 @@ import server.stepmate.email.EmailService;
 import server.stepmate.user.dto.SignInReq;
 import server.stepmate.user.dto.SignInRes;
 import server.stepmate.user.dto.UserAuthDto;
+import server.stepmate.user.dto.UserIdRes;
 import server.stepmate.user.entity.User;
 
 import java.security.NoSuchAlgorithmException;
@@ -77,7 +78,6 @@ public class UserService {
     }
 
     public void sendCodeToEmail(String toEmail) {
-        this.checkDuplicatedEmail(toEmail);
         String title = "Step-Mate 이메일 인증 번호";
         String authCode = this.createCode();
         emailService.sendEmail(toEmail,title,authCode);
@@ -90,7 +90,7 @@ public class UserService {
         }
     }
 
-    private void checkDuplicatedEmail(String email) {
+    public void checkDuplicatedEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             throw new CustomException(CustomExceptionStatus.USER_EXISTS_EMAIL);
@@ -114,12 +114,23 @@ public class UserService {
     }
 
     public void verifiedCode(String email, String authCode) {
-        this.checkDuplicatedEmail(email);
         String redisAuthCode = redisService.getValues(email);
         boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
         if (!authResult) {
             throw new CustomException(CustomExceptionStatus.INVALID_AUTH_CODE);
         }
+    }
+
+    public UserIdRes findByEmail(String email) {
+        UserIdRes userIdRes = new UserIdRes();
+        Optional<User> optional = userRepository.findByEmail(email);
+
+        if (optional.isEmpty()) {
+            throw new CustomException(CustomExceptionStatus.RESPONSE_ERROR);
+        }
+        User user = optional.get();
+        userIdRes.setUserId(user.getUserId());
+        return userIdRes;
     }
 
 
