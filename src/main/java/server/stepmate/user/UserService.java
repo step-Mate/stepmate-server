@@ -79,6 +79,12 @@ public class UserService {
         String authCode = this.createCode();
         emailService.sendEmail(toEmail,title,authCode);
     }
+    public void checkDuplicatedUserId(String userId) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (user.isPresent()) {
+            throw new CustomException(CustomExceptionStatus.USER_EXISTS_ID);
+        }
+    }
 
     private void checkDuplicatedEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -102,5 +108,7 @@ public class UserService {
         }
 
     }
+
+
 
 }
