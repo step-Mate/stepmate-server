@@ -11,10 +11,7 @@ import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.config.security.jwt.JwtTokenProvider;
 import server.stepmate.email.EmailService;
-import server.stepmate.user.dto.SignInReq;
-import server.stepmate.user.dto.SignInRes;
-import server.stepmate.user.dto.UserAuthDto;
-import server.stepmate.user.dto.UserIdRes;
+import server.stepmate.user.dto.*;
 import server.stepmate.user.entity.User;
 
 import java.security.NoSuchAlgorithmException;
@@ -131,6 +128,13 @@ public class UserService {
         User user = optional.get();
         userIdRes.setUserId(user.getUserId());
         return userIdRes;
+    }
+
+    @Transactional
+    public void changePassword(ChangePwdReq dto) {
+        User user = userRepository.findByUserId(dto.getUserId())
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.USER_NOT_VALID));
+        user.changePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
 

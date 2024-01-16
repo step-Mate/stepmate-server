@@ -68,12 +68,20 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-    @Operation(summary = "이메일 인증으로 아이디 찾기 API",description = "이메일 인증을 통해 유저 아이디를 반환")
-    @GetMapping("/email/findId")
+    @Operation(summary = "이메일 인증으로 아이디 찾는 API",description = "이메일 인증을 통해 유저 아이디를 반환")
+    @GetMapping("/users/findId")
     public DataResponse<UserIdRes> findIdByEmail(@RequestBody @Valid EmailReq req, Errors errors) {
         if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
         userService.verifiedCode(req.getEmail(),req.getAuthCode());
         return responseService.getDataResponse(userService.findByEmail(req.getEmail()));
+    }
+
+    @Operation(summary = "비밀번호 변경 API",description = "유저 아이디를 기준으로 비밀번호 변경")
+    @PatchMapping("/users/reset-password")
+    public CommonResponse resetPassword(@RequestBody @Valid ChangePwdReq req, Errors errors) {
+        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.changePassword(req);
+        return responseService.getSuccessResponse();
     }
 
 }
