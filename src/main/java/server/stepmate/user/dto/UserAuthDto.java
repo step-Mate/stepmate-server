@@ -22,10 +22,12 @@ public class UserAuthDto {
     private String userId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank
     @Length(min = 8, max = 16)
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]{8,16}$")
     private String password;
 
+    @NotBlank
     @Length(min = 2, max = 10)
     @Pattern(regexp = "^[a-zA-Z0-9!-*]{2,10}$")
     private String nickname;
