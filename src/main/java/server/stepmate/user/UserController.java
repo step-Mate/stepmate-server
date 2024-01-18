@@ -29,11 +29,11 @@ public class UserController {
     private final ResponseService responseService;
     private final EmailService emailService;
 
-    @Operation(summary = "현재 인증된 회원 정보 요청 API", description = "JWT 토큰을 기준으로 인증된 회원정보 반환")
+    /*@Operation(summary = "현재 인증된 회원 정보 요청 API", description = "JWT 토큰을 기준으로 인증된 회원정보 반환")
     @GetMapping("/users/auth")
     public DataResponse<UserAuthDto> getUserAuth(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return responseService.getDataResponse(userService.getUserAuth(customUserDetails));
-    }
+    }*/
 
     @Operation(summary = "아이디 Validation API", description = "아이디 검증 API")
     @ApiResponses(value = {
