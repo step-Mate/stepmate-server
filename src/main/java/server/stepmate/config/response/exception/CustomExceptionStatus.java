@@ -20,6 +20,9 @@ public enum CustomExceptionStatus {
     REQUEST_ERROR(false, 400, "입력값을 확인해주세요."),
     EMPTY_JWT(false, 401, "JWT이 비어있습니다."),
     INVALID_JWT(false, 402, "유효하지 않은 JWT입니다."),
+    INVALID_AUTH_CODE(false, 403, "유요하지 않은 인증코드입니다."),
+    USER_NOT_VALID(false, 404, "유효한 사용자가 없습니다."),
+    FAILED_TO_LOGIN(false, 405, "아이디 또는 비밀번호가 올바르지 않습니다."),
 
     USER_EMPTY_ID(false,410,"아이디를 입력해 주세요"),
     USER_INVALID_ID(false, 411, "아이디 형식을 확인해 주세요"),
@@ -40,11 +43,13 @@ public enum CustomExceptionStatus {
     USER_EMPTY_HEIGHT(false,451,"키를 입력해 주세요"),
     USER_EMPTY_WEIGHT(false,452,"몸무게를 입력해 주세요"),
 
+
+
     /**
-     * 300 : Response 오류
+     * 500 : 서버 내부 오류
      */
-    RESPONSE_ERROR(false, 300, "값을 불러오는데 실패하였습니다."),
-    FAILED_TO_LOGIN(false, 301, "로그인 또는 비밀번호가 올바르지 않습니다.");
+    RESPONSE_ERROR(false, 500, "값을 불러오는데 실패하였습니다."),
+    NO_SUCH_ALGORITHM(false, 555, "난수 생성 알고리즘을 찾지 못했습니다.");
 
 
 
