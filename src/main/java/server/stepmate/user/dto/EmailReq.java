@@ -15,5 +15,4 @@ public class EmailReq {
     @Email
     private String email;
 
-    private String authCode;
 }
