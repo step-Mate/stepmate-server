@@ -40,6 +40,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    private Integer level;
+
+    private Integer XP;
+
+    private Integer totalStep;
+
+    private Integer MonthStep;
+
     public static User createUser(UserAuthDto dto) {
         return User.builder()
                 .userId(dto.getUserId())
