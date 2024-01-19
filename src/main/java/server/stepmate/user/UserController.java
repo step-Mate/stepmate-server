@@ -22,7 +22,6 @@ import server.stepmate.user.dto.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/app")
 public class UserController {
 
     private final UserService userService;
