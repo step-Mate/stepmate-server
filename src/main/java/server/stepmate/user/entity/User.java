@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.stepmate.mission.entity.UserMission;
 import server.stepmate.user.dto.UserAuthDto;
 import server.stepmate.user.entity.enumtypes.RoleType;
+
+import java.util.List;
 
 import static server.stepmate.user.entity.enumtypes.RoleType.*;
 
@@ -47,6 +50,9 @@ public class User {
     private Integer totalStep;
 
     private Integer MonthStep;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserMission> userMissions;
 
     public static User createUser(UserAuthDto dto) {
         return User.builder()
