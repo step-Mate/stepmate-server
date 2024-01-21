@@ -18,10 +18,10 @@ public class Mission {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private MissionType missionType;
+    private MissionType missionType; //STEP,CALORIE
 
     @Enumerated(EnumType.STRING)
-    private MissionCycle missionCycle;
+    private MissionCycle missionCycle; //WEEKLY,MONTHLY,NONE
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
@@ -30,8 +30,6 @@ public class Mission {
     private String contents;
 
     private Integer goal;
-
-    private boolean isComplete;
 
     private String reward;
 }

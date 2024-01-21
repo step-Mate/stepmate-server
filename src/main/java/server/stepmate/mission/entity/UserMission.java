@@ -25,4 +25,6 @@ public class UserMission {
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
+    private boolean isComplete;
+
 }
