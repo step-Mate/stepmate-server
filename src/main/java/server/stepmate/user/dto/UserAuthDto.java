@@ -44,6 +44,4 @@ public class UserAuthDto {
     @NotNull
     private Integer weight;
 
-    private String jwt;
-
 }

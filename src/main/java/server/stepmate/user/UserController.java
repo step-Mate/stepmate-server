@@ -58,11 +58,11 @@ public class UserController {
     }
 
 
-    @Operation(summary = "로그인 인증 API", description = "형식에 맞는 DTO로 요청 -> JWT 토큰을 포함한 회원 정보 반환")
+    @Operation(summary = "로그인 인증 API", description = "형식에 맞는 DTO로 요청 -> accessToken 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공",
                     content = {@Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = "{\"code\":200, \"message\":\"요청에 성공하였습니다.\",\"result\":{\"id\":0,\"userId\":\"string\",\"jwt\":\"string\"}}"))
+                            examples = @ExampleObject(value = "{\"code\":200, \"message\":\"요청에 성공하였습니다.\",\"result\":{\"jwt\":\"string\"}}"))
                     }),
             @ApiResponse(responseCode = "405", description = "로그인 실패",
                     content = {@Content(mediaType = "application/json",
@@ -78,16 +78,16 @@ public class UserController {
                     })
     })
     @PostMapping("/sign-in")
-    public DataResponse<SignInRes> signIn(@RequestBody @Valid SignInReq req, Errors errors) {
+    public DataResponse<AccessTokenDto> signIn(@RequestBody @Valid SignInReq req, Errors errors) {
         if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
         return responseService.getDataResponse(userService.signIn(req));
     }
 
-    @Operation(summary = "회원가입 API", description = "형식에 맞는 DTO로 요청 -> 회원가입")
+    @Operation(summary = "회원가입 API", description = "형식에 맞는 DTO로 요청 -> 회원가입 성공시 accessToken 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공",
                     content = {@Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = "{\"code\":200, \"message\":\"요청에 성공하였습니다.\",\"result\":{\"id\":0,\"userId\":\"string\",\"nickname\":\"string\",\"email\":\"string\",\"age\":0,\"height\":0,\"weight\":0,\"jwt\":\"string\"}}"))
+                            examples = @ExampleObject(value = "{\"code\":200, \"message\":\"요청에 성공하였습니다.\",\"result\":{\"accessToken\":\"string\":\"string\"}}"))
                     }),
             @ApiResponse(responseCode = "410", description = "아이디 공백 오류",
                     content = {@Content(mediaType = "application/json",
@@ -131,7 +131,7 @@ public class UserController {
                     })
     })
     @PostMapping("/sign-up")
-    public DataResponse<UserAuthDto> signUp(@RequestBody @Valid UserAuthDto userAuthDto, Errors errors) {
+    public DataResponse<AccessTokenDto> signUp(@RequestBody @Valid UserAuthDto userAuthDto, Errors errors) {
         if (errors.hasErrors()){ ValidationExceptionProvider.throwValidError(errors);}
         return responseService.getDataResponse(userService.signUp(userAuthDto));
     }
@@ -245,5 +245,10 @@ public class UserController {
         userService.changePassword(req);
         return responseService.getSuccessResponse();
     }
+
+    /*@GetMapping("/myinfo")
+    public DataResponse getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return responseService.getDataResponse()
+    }*/
 
 }

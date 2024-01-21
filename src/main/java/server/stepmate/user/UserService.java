@@ -32,24 +32,19 @@ public class UserService {
     private final RedisService redisService;
 
     @Transactional
-    public SignInRes signIn(SignInReq req) {
+    public AccessTokenDto signIn(SignInReq req) {
         User user = userRepository.findByUserId(req.getUserId())
                 .orElseThrow(() -> new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN));
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN);
         }
 
-        SignInRes res = SignInRes.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .jwt(jwtTokenProvider.createToken(user.getUserId(), user.getRole()))
-                .build();
-
-        return res;
+        AccessTokenDto dto = new AccessTokenDto(jwtTokenProvider.createToken(user.getUserId(), user.getRole()));
+        return dto;
     }
 
     @Transactional
-    public UserAuthDto signUp(UserAuthDto userAuthDto) {
+    public AccessTokenDto signUp(UserAuthDto userAuthDto) {
         if (userRepository.findByUserId(userAuthDto.getUserId()).isPresent()) {
             throw new CustomException(CustomExceptionStatus.USER_EXISTS_ID);
         }
@@ -62,16 +57,8 @@ public class UserService {
         userAuthDto.setPassword(passwordEncoder.encode(userAuthDto.getPassword()));
         User user = User.createUser(userAuthDto);
         User save = userRepository.save(user);
-        userAuthDto.setId(save.getId());
-        userAuthDto.setJwt(jwtTokenProvider.createToken(userAuthDto.getUserId(), user.getRole()));
-        return userAuthDto;
-    }
-
-    public UserAuthDto getUserAuth(CustomUserDetails customUserDetails) {
-        User user = customUserDetails.getUser();
-        UserAuthDto userAuthDto = user.getUserAuthDto();
-        userAuthDto.setJwt(jwtTokenProvider.createToken(user.getUserId(), user.getRole()));
-        return userAuthDto;
+        AccessTokenDto dto = new AccessTokenDto(jwtTokenProvider.createToken(userAuthDto.getUserId(), user.getRole()));
+        return dto;
     }
 
     public void sendCodeToEmail(String toEmail) {
