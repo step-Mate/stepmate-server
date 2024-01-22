@@ -31,5 +31,5 @@ public class Mission {
 
     private Integer goal;
 
-    private String reward;
+    private Integer reward;
 }
