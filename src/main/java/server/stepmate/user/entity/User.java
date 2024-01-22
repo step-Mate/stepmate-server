@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.stepmate.mission.entity.UserMission;
 import server.stepmate.user.dto.UserAuthDto;
+import server.stepmate.user.dto.UserRankDto;
 import server.stepmate.user.entity.enumtypes.RoleType;
 
 import java.util.List;
@@ -43,13 +44,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    /**
+     * 레벨에 필요한것
+     * 현재 레벨업에 필요한 경험치
+     */
     private Integer level;
 
     private Integer XP;
 
     private Integer totalStep;
 
-    private Integer MonthStep;
+    private Integer monthStep;
 
     @OneToMany(mappedBy = "user")
     private List<UserMission> userMissions;
@@ -76,6 +81,13 @@ public class User {
                 .age(this.age)
                 .height(this.height)
                 .weight(this.weight)
+                .build();
+    }
+
+    public UserRankDto getUserRankDto() {
+        return UserRankDto.builder()
+                .nickname(this.nickname)
+                .monthStep(this.monthStep)
                 .build();
     }
 

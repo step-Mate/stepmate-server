@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import server.stepmate.config.redis.RedisService;
 import server.stepmate.config.response.exception.CustomException;
 import server.stepmate.config.response.exception.CustomExceptionStatus;
-import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.config.security.jwt.JwtTokenProvider;
 import server.stepmate.email.EmailService;
 import server.stepmate.user.dto.*;
@@ -17,7 +16,10 @@ import server.stepmate.user.entity.User;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -124,6 +126,17 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
+    public List<UserRankDto> getUserRanks() {
+        List<UserRankDto> UserRankDtoList = new ArrayList<>();
+        List<User> userList = userRepository.findTop100ByMonthStep();
+        return getUserRankDtoList(userList);
+    }
+
+    private List<UserRankDto> getUserRankDtoList(List<User> userList) {
+        return userList.stream()
+                .map(User::getUserRankDto)
+                .collect(Collectors.toList());
+    }
 
 
 }
