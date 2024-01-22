@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.stepmate.mission.dto.MissionDto;
 import server.stepmate.user.entity.User;
 
 @Getter
@@ -26,5 +27,13 @@ public class UserMission {
     private Mission mission;
 
     private boolean isComplete;
+
+    public MissionDto getMissionDto() {
+        return MissionDto.builder()
+                .id(this.id)
+                .goal(this.mission.getReward())
+                .reward(this.mission.getReward())
+                .build();
+    }
 
 }
