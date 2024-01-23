@@ -9,6 +9,7 @@ import server.stepmate.config.response.ResponseService;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.mission.MissionService;
 import server.stepmate.mission.dto.MissionDto;
+import server.stepmate.mission.dto.MissionTitleDto;
 
 import java.util.List;
 
@@ -16,12 +17,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private ResponseService responseService;
-    private MissionService missionService;
+    private final ResponseService responseService;
+    private final MissionService missionService;
 
     @GetMapping("/home/missions")
     public DataResponse<List<MissionDto>> getHomeMission(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return responseService.getDataResponse(missionService.getHomeMission(customUserDetails));
+    }
+
+    @GetMapping("/home/titles")
+    public DataResponse<List<MissionTitleDto>> getUserTitles(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return responseService.getDataResponse(missionService.getUserTitle(customUserDetails));
     }
 
 
