@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import server.stepmate.config.redis.RedisService;
 import server.stepmate.config.response.exception.CustomException;
 import server.stepmate.config.response.exception.CustomExceptionStatus;
+import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.config.security.jwt.JwtTokenProvider;
 import server.stepmate.email.EmailService;
 import server.stepmate.user.dto.*;
@@ -142,6 +143,12 @@ public class UserService {
         return userList.stream()
                 .map(User::getUserRankDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void selectTitle(String title, CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        user.changeTitle(title);
     }
 
     @Transactional
