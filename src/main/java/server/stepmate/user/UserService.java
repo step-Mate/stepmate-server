@@ -119,6 +119,12 @@ public class UserService {
         return userIdRes;
     }
 
+    public boolean existUser(String userId) {
+        if(userRepository.existsByUserId(userId))
+            return true;
+        else throw new CustomException(CustomExceptionStatus.USER_NOT_VALID);
+    }
+
     @Transactional
     public void changePassword(ChangePwdReq dto) {
         User user = userRepository.findByUserId(dto.getUserId())

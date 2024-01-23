@@ -215,6 +215,16 @@ public class UserController {
         return responseService.getDataResponse(userService.findByEmail(req.getEmail()));
     }
 
+
+    @GetMapping("/users/findPwd")
+    public CommonResponse findPwdByIdAndEmail(@RequestBody @Valid UserIdEmailAuthReq req, Errors errors) {
+        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.verifiedCode(req.getEmail(), req.getAuthCode());
+        userService.existUser(req.getUserId());
+        return responseService.getSuccessResponse();
+    }
+
+
     @Operation(summary = "비밀번호 변경 API",description = "유저 아이디를 기준으로 비밀번호 변경")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공",

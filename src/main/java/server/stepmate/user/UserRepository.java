@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    boolean existsByUserId(String userId);
+
     @Query("select i from User i order by i.monthStep desc")
     List<User> findTop100ByMonthStep();
 
