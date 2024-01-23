@@ -25,10 +25,6 @@ public class Mission {
     @Enumerated(EnumType.STRING)
     private MissionCycle missionCycle; //WEEKLY,MONTHLY,NONE
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private UserMission userMission;
-
     private String contents;
 
     private Integer goal;
