@@ -7,7 +7,7 @@ import server.stepmate.mission.entity.UserMission;
 
 import java.util.List;
 
-public interface UserMissionRepository extends JpaRepository<UserMission,Long> {
+public interface UserMissionRepository extends JpaRepository<UserMission, Long> {
 
     @Query("SELECT i from UserMission i WHERE i.user.id = :id and i.isComplete = false order by i.mission.id asc ")
     List<UserMission> findTop5ByUserMission(@Param("id") Long id);
@@ -17,4 +17,8 @@ public interface UserMissionRepository extends JpaRepository<UserMission,Long> {
 
     @Query("update UserMission u set u.isComplete=false where u.mission.missionCycle='MONTHLY'")
     void resetUserMissionTypeMonthly();
+
+    @Query("select u.mission.title from UserMission u where u.user.id=:id and u.isComplete = true")
+    List<String> findByUserMissionTitle(@Param("id") Long id);
+
 }

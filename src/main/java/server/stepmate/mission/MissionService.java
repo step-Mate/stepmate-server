@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import server.stepmate.config.response.exception.CustomException;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.mission.dto.MissionDto;
+import server.stepmate.mission.dto.MissionTitleDto;
 import server.stepmate.mission.entity.UserMission;
 import server.stepmate.user.entity.User;
 
@@ -25,11 +26,23 @@ public class MissionService {
     private final UserMissionRepository userMissionRepository;
 
     public List<MissionDto> getHomeMission(CustomUserDetails customUserDetails) {
-        List<MissionDto> missionDtoList = new ArrayList<>();
+        List<MissionDto> missionDtoList =new ArrayList<>();
         User user = customUserDetails.getUser();
         List<UserMission> userMissions = userMissionRepository.findTop5ByUserMission(user.getId());
 
         return getMissionDtoList(userMissions);
+    }
+
+    public List<MissionTitleDto> getUserTitle(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        List<String> titleList = userMissionRepository.findByUserMissionTitle(user.getId());
+        return getMissionTitleDtoList(titleList);
+    }
+
+    private  List<MissionTitleDto> getMissionTitleDtoList(List<String> titleList) {
+        return titleList.stream()
+                .map(MissionTitleDto::new)
+                .toList();
     }
 
     private List<MissionDto> getMissionDtoList(List<UserMission> userMissions) {

@@ -17,6 +17,8 @@ public class Mission {
     @Id
     private Long id;
 
+    private String title;
+
     @Enumerated(EnumType.STRING)
     private MissionType missionType; //STEP,CALORIE
 
