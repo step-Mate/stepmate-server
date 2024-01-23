@@ -138,5 +138,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void resetAllUserMonthStep() {
+        userRepository.resetAllUserMonthStep();
+    }
+
 
 }

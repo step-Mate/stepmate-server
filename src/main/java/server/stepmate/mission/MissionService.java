@@ -37,4 +37,14 @@ public class MissionService {
                 .map(UserMission::getMissionDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void resetWeeklyUserMission() {
+        userMissionRepository.resetUserMissionTypeWeekly();
+    }
+
+    @Transactional
+    public void resetMonthlyUserMission() {
+        userMissionRepository.resetUserMissionTypeMonthly();
+    }
 }

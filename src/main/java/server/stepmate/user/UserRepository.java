@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select i from User i order by i.monthStep desc")
     List<User> findTop100ByMonthStep();
+
+    @Query("update User u set u.monthStep=0")
+    void resetAllUserMonthStep();
 }
