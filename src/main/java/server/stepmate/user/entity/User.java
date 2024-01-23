@@ -22,6 +22,8 @@ import static server.stepmate.user.entity.enumtypes.RoleType.*;
 @Table(name = "_user")
 public class User {
 
+    private static final Integer EXPERIENCE_FOR_LEVEL_UP = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,17 +46,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    /**
-     * 레벨에 필요한것
-     * 현재 레벨업에 필요한 경험치
-     */
-    private Integer level;
-
     private Integer XP;
 
     private Integer totalStep;
 
     private Integer monthStep;
+
+    private String title;
 
     @OneToMany(mappedBy = "user")
     private List<UserMission> userMissions;
@@ -93,6 +91,18 @@ public class User {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public Integer getLevel() {
+        return this.XP / EXPERIENCE_FOR_LEVEL_UP;
+    }
+
+    public Integer getCurrentXP() {
+        return this.XP % EXPERIENCE_FOR_LEVEL_UP;
     }
 
 }
