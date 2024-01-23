@@ -13,6 +13,8 @@ public class MissionDto {
 
     private Long id;
 
+    private String contents;
+
     private Integer goal;
 
     private Integer reward;

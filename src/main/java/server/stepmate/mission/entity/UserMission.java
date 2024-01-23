@@ -3,12 +3,14 @@ package server.stepmate.mission.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.stepmate.mission.dto.MissionDto;
 import server.stepmate.user.entity.User;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,7 +33,8 @@ public class UserMission {
     public MissionDto getMissionDto() {
         return MissionDto.builder()
                 .id(this.id)
-                .goal(this.mission.getReward())
+                .contents(this.mission.getContents())
+                .goal(this.mission.getGoal())
                 .reward(this.mission.getReward())
                 .build();
     }
