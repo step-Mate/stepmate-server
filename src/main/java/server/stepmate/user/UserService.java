@@ -11,6 +11,9 @@ import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.config.security.jwt.JwtTokenProvider;
 import server.stepmate.email.EmailService;
+import server.stepmate.mission.MissionRepository;
+import server.stepmate.mission.entity.Mission;
+import server.stepmate.mission.entity.UserMission;
 import server.stepmate.user.dto.*;
 import server.stepmate.user.entity.User;
 
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final MissionRepository missionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
@@ -59,9 +63,29 @@ public class UserService {
 
         userAuthDto.setPassword(passwordEncoder.encode(userAuthDto.getPassword()));
         User user = User.createUser(userAuthDto);
-        User save = userRepository.save(user);
+        User save = userRepository.save(createUserMissions(user));
         AccessTokenDto dto = new AccessTokenDto(jwtTokenProvider.createToken(userAuthDto.getUserId(), user.getRole()));
         return dto;
+    }
+
+    @Transactional
+    public User createUserMissions(User user) {
+        List<Mission> allMissions = missionRepository.findAll();
+        System.out.println("allMissions = " + allMissions);
+        List<UserMission> userMissions = new ArrayList<>();
+
+        for (Mission mission : allMissions) {
+            UserMission userMission = UserMission.builder()
+                    .user(user)
+                    .mission(mission)
+                    .isComplete(false)
+                    .build();
+            userMissions.add(userMission);
+        }
+        System.out.println("userMissions = " + userMissions);
+
+        user.initUserMissions(userMissions);
+        return user;
     }
 
     public void sendCodeToEmail(String toEmail) {
@@ -149,6 +173,7 @@ public class UserService {
     public void selectTitle(String title, CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
         user.changeTitle(title);
+        userRepository.save(user);
     }
 
     @Transactional

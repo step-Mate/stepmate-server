@@ -54,7 +54,7 @@ public class User {
 
     private String title;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserMission> userMissions;
 
     public static User createUser(UserAuthDto dto) {
@@ -66,6 +66,9 @@ public class User {
                 .age(dto.getAge())
                 .height(dto.getHeight())
                 .weight(dto.getWeight())
+                .XP(0)
+                .totalStep(0)
+                .monthStep(0)
                 .role(ROLE_USER)
                 .build();
     }
@@ -95,6 +98,10 @@ public class User {
 
     public void changeTitle(String title) {
         this.title = title;
+    }
+
+    public void initUserMissions(List<UserMission> userMissions) {
+        this.userMissions = userMissions;
     }
 
     public Integer getLevel() {
