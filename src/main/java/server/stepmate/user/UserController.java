@@ -78,7 +78,7 @@ public class UserController {
                     })
     })
     @PostMapping("/sign-in")
-    public DataResponse<AccessTokenDto> signIn(@RequestBody @Valid SignInReq req, Errors errors) {
+    public DataResponse<TokenDto> signIn(@RequestBody @Valid SignInReq req, Errors errors) {
         if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
         return responseService.getDataResponse(userService.signIn(req));
     }
@@ -131,7 +131,7 @@ public class UserController {
                     })
     })
     @PostMapping("/sign-up")
-    public DataResponse<AccessTokenDto> signUp(@RequestBody @Valid UserAuthDto userAuthDto, Errors errors) {
+    public DataResponse<TokenDto> signUp(@RequestBody @Valid UserAuthDto userAuthDto, Errors errors) {
         if (errors.hasErrors()){ ValidationExceptionProvider.throwValidError(errors);}
         return responseService.getDataResponse(userService.signUp(userAuthDto));
     }
@@ -254,6 +254,11 @@ public class UserController {
         if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
         userService.changePassword(req);
         return responseService.getSuccessResponse();
+    }
+
+    @GetMapping("/reissue")
+    public DataResponse<AccessTokenDto> reissueToken(@RequestHeader("Authorization") String refreshToken) {
+        return responseService.getDataResponse(userService.reissueAccessToken(refreshToken));
     }
 
     /*@GetMapping("/myinfo")

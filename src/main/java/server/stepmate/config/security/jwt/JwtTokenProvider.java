@@ -22,7 +22,8 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private static final long TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1 * 60 * 60 * 1000L; // 1시간
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
     private final UserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
@@ -33,14 +34,23 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userId, RoleType role) {
+    public String createAccessToken(String userId, RoleType role) {
         Claims claims = Jwts.claims().setSubject(userId);
         claims.put("role", role);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + TOKEN_EXPIRE_TIME))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
+    public String createRefreshToken(String userId) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setSubject(userId)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
@@ -56,7 +66,7 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-ACCESS-TOKEN");
+        return request.getHeader("Authorization");
     }
 
     public boolean validateToken(String jwtToken, HttpServletRequest req) {

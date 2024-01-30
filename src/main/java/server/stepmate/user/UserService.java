@@ -39,19 +39,24 @@ public class UserService {
     private final RedisService redisService;
 
     @Transactional
-    public AccessTokenDto signIn(SignInReq req) {
+    public TokenDto signIn(SignInReq req) {
         User user = userRepository.findByUserId(req.getUserId())
                 .orElseThrow(() -> new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN));
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN);
         }
 
-        AccessTokenDto dto = new AccessTokenDto(jwtTokenProvider.createToken(user.getUserId(), user.getRole()));
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRole());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+
+        redisService.setValues(user.getUserId(), refreshToken,Duration.ofMillis(JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME));
+
+        TokenDto dto = new TokenDto(refreshToken, accessToken);
         return dto;
     }
 
     @Transactional
-    public AccessTokenDto signUp(UserAuthDto userAuthDto) {
+    public TokenDto signUp(UserAuthDto userAuthDto) {
         if (userRepository.findByUserId(userAuthDto.getUserId()).isPresent()) {
             throw new CustomException(CustomExceptionStatus.USER_EXISTS_ID);
         }
@@ -64,7 +69,13 @@ public class UserService {
         userAuthDto.setPassword(passwordEncoder.encode(userAuthDto.getPassword()));
         User user = User.createUser(userAuthDto);
         User save = userRepository.save(createUserMissions(user));
-        AccessTokenDto dto = new AccessTokenDto(jwtTokenProvider.createToken(userAuthDto.getUserId(), user.getRole()));
+
+        String accessToken = jwtTokenProvider.createAccessToken(userAuthDto.getUserId(), user.getRole());
+        String refreshToken = jwtTokenProvider.createRefreshToken(userAuthDto.getUserId());
+
+        redisService.setValues(userAuthDto.getUserId(),refreshToken,Duration.ofMillis(JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME));
+
+        TokenDto dto = new TokenDto(refreshToken, accessToken);
         return dto;
     }
 
@@ -181,5 +192,16 @@ public class UserService {
         userRepository.resetAllUserMonthStep();
     }
 
+    public AccessTokenDto reissueAccessToken(String token) {
+        String userId = jwtTokenProvider.getUsername(token);
+        User user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(CustomExceptionStatus.INVALID_JWT));
+        String refreshToken = redisService.getValues(user.getUserId());
+        if (!token.equals(refreshToken)) {
+            throw new CustomException(CustomExceptionStatus.INVALID_JWT);
+        }
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRole());
 
+        AccessTokenDto accessTokenDto = new AccessTokenDto(accessToken);
+        return accessTokenDto;
+    }
 }
