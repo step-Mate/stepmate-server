@@ -26,7 +26,6 @@ public class UserController {
 
     private final UserService userService;
     private final ResponseService responseService;
-    private final EmailService emailService;
 
     /*@Operation(summary = "현재 인증된 회원 정보 요청 API", description = "JWT 토큰을 기준으로 인증된 회원정보 반환")
     @GetMapping("/users/auth")
@@ -152,9 +151,9 @@ public class UserController {
                     })
     })
     @GetMapping("/email/verification-request")
-    public CommonResponse requestVerification(@RequestBody @Valid EmailReq req, Errors errors) {
-        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
-        userService.sendCodeToEmail(req.getEmail());
+    public CommonResponse requestVerification(@RequestParam("email")String email) {
+//        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.sendCodeToEmail(email);
         return responseService.getSuccessResponse();
     }
 
@@ -179,9 +178,10 @@ public class UserController {
                     })
     })
     @GetMapping("/email/verifications")
-    public CommonResponse verificationEmail(@RequestBody @Valid EmailAuthReq req, Errors errors) {
-        userService.checkDuplicatedEmail(req.getEmail());
-        userService.verifiedCode(req.getEmail(), req.getAuthCode());
+    public CommonResponse verificationEmail(@RequestParam("email")String email,
+                                            @RequestParam("authCode") String authCode) {
+        userService.checkDuplicatedEmail(email);
+        userService.verifiedCode(email, authCode);
         return responseService.getSuccessResponse();
     }
 
@@ -209,18 +209,20 @@ public class UserController {
                     })
     })
     @GetMapping("/users/findId")
-    public DataResponse<UserIdRes> findIdByEmail(@RequestBody @Valid EmailAuthReq req, Errors errors) {
-        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
-        userService.verifiedCode(req.getEmail(),req.getAuthCode());
-        return responseService.getDataResponse(userService.findByEmail(req.getEmail()));
+    public DataResponse<UserIdRes> findIdByEmail(@RequestParam("email") String email,
+                                                 @RequestParam("authCode") String authCode) {
+//        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.verifiedCode(email, authCode);
+        return responseService.getDataResponse(userService.findByEmail(email));
     }
 
 
     @GetMapping("/users/findPwd")
-    public CommonResponse findPwdByIdAndEmail(@RequestBody @Valid UserIdEmailAuthReq req, Errors errors) {
-        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
-        userService.verifiedCode(req.getEmail(), req.getAuthCode());
-        userService.existUser(req.getUserId());
+    public CommonResponse findPwdByIdAndEmail(@RequestParam("userId") String userId,
+                                              @RequestParam("email") String email,
+                                              @RequestParam("authCode") String authCode) {
+        userService.verifiedCode(email, authCode);
+        userService.existUser(userId);
         return responseService.getSuccessResponse();
     }
 
