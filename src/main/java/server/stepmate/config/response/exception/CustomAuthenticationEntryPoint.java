@@ -25,6 +25,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             response.sendRedirect("/errors/empty-jwt");
         } else if (exception.equals(CustomExceptionStatus.INVALID_JWT.getMessage())) {
             response.sendRedirect("/errors/invalid-jwt");
+        } else if (exception.equals(CustomExceptionStatus.NOT_AUTHENTICATED_ACCOUNT.getMessage())) {
+            response.sendRedirect("/errors/not-authenticated-account");
         }
 
     }

@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import server.stepmate.config.response.exception.CustomExceptionStatus;
 
 import java.io.IOException;
 
@@ -25,7 +26,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = jwtTokenProvider.resolveToken(request);
 
-        if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt,request)) {
+        if(jwt==null) request.setAttribute("exception", CustomExceptionStatus.NOT_AUTHENTICATED_ACCOUNT);
+        else if (jwtTokenProvider.validateToken(jwt,request)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
