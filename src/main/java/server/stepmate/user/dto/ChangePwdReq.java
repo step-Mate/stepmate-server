@@ -19,7 +19,7 @@ public class ChangePwdReq {
 
     @NotBlank
     @Length(min = 8, max = 16)
-    @Pattern(regexp = "^[가-힣a-zA-Z0-9]{8,16}$")
+    @Pattern(regexp = "^[a-zA-Z0-9!-*]{8,16}$")
     private String password;
 
 }
