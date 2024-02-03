@@ -24,6 +24,10 @@ public enum CustomExceptionStatus {
     USER_NOT_VALID(false, 404, "유효한 사용자가 없습니다."),
     FAILED_TO_LOGIN(false, 405, "아이디 또는 비밀번호가 올바르지 않습니다."),
 
+    ACCOUNT_ACCESS_DENIED(false,406,"권한이 없습니다."),
+
+    NOT_AUTHENTICATED_ACCOUNT(false,407,"로그인이 필요합니다."),
+
     USER_EMPTY_ID(false,410,"아이디를 입력해 주세요"),
     USER_INVALID_ID(false, 411, "아이디 형식을 확인해 주세요"),
     USER_EXISTS_ID(false,412,"중복된 아이디 입니다."),
