@@ -2,6 +2,8 @@ package server.stepmate.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -168,11 +170,11 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
-    public List<UserRankDto> getUserRanks() {
-        List<UserRankDto> UserRankDtoList = new ArrayList<>();
-        List<User> userList = userRepository.findTop100ByMonthStep();
-        return getUserRankDtoList(userList);
-    }
+//    public List<UserRankDto> getUserRanks() {
+//        List<UserRankDto> UserRankDtoList = new ArrayList<>();
+//        List<User> userList = userRepository.findTop100ByMonthStep();
+//        return getUserRankDtoList(userList);
+//    }
 
     private List<UserRankDto> getUserRankDtoList(List<User> userList) {
         return userList.stream()
@@ -203,5 +205,40 @@ public class UserService {
 
         AccessTokenDto accessTokenDto = new AccessTokenDto(accessToken);
         return accessTokenDto;
+    }
+
+    public List<UserRankDto> getUserRanks(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 25);
+        Page<User> userPage = userRepository.findAllOrderByMonthStepLevelNickname(pageRequest);
+        List<User> userList = userPage.getContent();
+
+        List<UserRankDto> userRankDtoList = getRankDtoList(userList);
+
+        assignRanks(userRankDtoList);
+
+        return userRankDtoList;
+    }
+
+    private  List<UserRankDto> getRankDtoList(List<User> userList) {
+        return userList.stream().map(User::getUserRankDto).toList();
+    }
+
+    private void assignRanks(List<UserRankDto> userRankDtoList) {
+        int Rank = 1;
+        int currentRank = 1;
+        int previousMonthStep = Integer.MAX_VALUE;
+
+        for (UserRankDto userRankDto : userRankDtoList) {
+            if (userRankDto.getMonthStep() == previousMonthStep) {
+                userRankDto.setRank(currentRank);
+            } else {
+                userRankDto.setRank(Rank);
+                currentRank = Rank;
+            }
+
+            previousMonthStep = userRankDto.getMonthStep();
+            Rank++;
+        }
+
     }
 }

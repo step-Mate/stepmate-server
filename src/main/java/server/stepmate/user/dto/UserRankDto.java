@@ -1,15 +1,17 @@
 package server.stepmate.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserRankDto {
+
+    private Integer rank;
+
+    private Integer level;
 
     private String nickname;
 

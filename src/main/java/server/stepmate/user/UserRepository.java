@@ -1,6 +1,8 @@
 package server.stepmate.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,4 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("update User u set u.monthStep=0")
     void resetAllUserMonthStep();
+
+    @Query("select u from User u order by u.monthStep DESC, u.level DESC, u.nickname asc ")
+    Page<User> findAllOrderByMonthStepLevelNickname(Pageable pageable);
 }

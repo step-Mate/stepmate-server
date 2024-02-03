@@ -2,6 +2,7 @@ package server.stepmate.rankingboard;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import server.stepmate.config.response.DataResponse;
 import server.stepmate.config.response.ResponseService;
@@ -18,7 +19,7 @@ public class RankingBoardController {
     private UserService userService;
 
     @GetMapping("/rank-board")
-    public DataResponse<List<UserRankDto>> getRankBoard() {
-        return responseService.getDataResponse(userService.getUserRanks());
+    public DataResponse<List<UserRankDto>> getRankBoard(@RequestParam("page") int page) {
+        return responseService.getDataResponse(userService.getUserRanks(page));
     }
 }
