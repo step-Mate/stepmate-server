@@ -46,6 +46,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    private Integer level;
+
     private Integer XP;
 
     private Integer totalStep;
@@ -66,6 +68,7 @@ public class User {
                 .age(dto.getAge())
                 .height(dto.getHeight())
                 .weight(dto.getWeight())
+                .level(0)
                 .XP(0)
                 .totalStep(0)
                 .monthStep(0)
@@ -89,6 +92,7 @@ public class User {
         return UserRankDto.builder()
                 .nickname(this.nickname)
                 .monthStep(this.monthStep)
+                .level(this.level)
                 .build();
     }
 
@@ -104,12 +108,12 @@ public class User {
         this.userMissions = userMissions;
     }
 
-    public Integer getLevel() {
-        return this.XP / EXPERIENCE_FOR_LEVEL_UP;
+
+    public void calculateLevel() {
+        this.level = this.XP / EXPERIENCE_FOR_LEVEL_UP;
     }
 
     public Integer getCurrentXP() {
         return this.XP % EXPERIENCE_FOR_LEVEL_UP;
     }
-
 }
