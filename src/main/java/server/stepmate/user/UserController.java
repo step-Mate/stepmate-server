@@ -56,6 +56,13 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @PostMapping("/users/nickname/validation")
+    public CommonResponse getNickNameValidation(@RequestBody @Valid NickNameReq dto, Errors errors) {
+
+        if (errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        userService.checkDuplicatedNickname(dto.getNickname());
+        return responseService.getSuccessResponse();
+    }
 
     @Operation(summary = "로그인 인증 API", description = "형식에 맞는 DTO로 요청 -> accessToken 반환")
     @ApiResponses(value = {

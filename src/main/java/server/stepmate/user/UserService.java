@@ -114,6 +114,13 @@ public class UserService {
         }
     }
 
+    public void checkDuplicatedNickname(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+        if (user.isPresent()) {
+            throw new CustomException(CustomExceptionStatus.USER_EXISTS_NICKNAME);
+        }
+    }
+
     public void checkDuplicatedEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
