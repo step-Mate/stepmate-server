@@ -263,6 +263,13 @@ public class UserController {
         return responseService.getDataResponse(userService.reissueAccessToken(refreshToken));
     }
 
+    @PostMapping("/users/withdraw")
+    public CommonResponse withdrawUser(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ValidatePwdDto dto) {
+        userService.withdrawUser(customUserDetails, dto);
+        return responseService.getSuccessResponse();
+    }
+
+
     /*@GetMapping("/myinfo")
     public DataResponse getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return responseService.getDataResponse()

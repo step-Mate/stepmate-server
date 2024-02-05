@@ -170,6 +170,15 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
+    @Transactional
+    public void withdrawUser(CustomUserDetails customUserDetails, ValidatePwdDto dto) {
+        User user = customUserDetails.getUser();
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN);
+        }
+        userRepository.deleteById(user.getId());
+    }
+
 //    public List<UserRankDto> getUserRanks() {
 //        List<UserRankDto> UserRankDtoList = new ArrayList<>();
 //        List<User> userList = userRepository.findTop100ByMonthStep();
