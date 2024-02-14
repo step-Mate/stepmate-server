@@ -16,7 +16,9 @@ import server.stepmate.email.EmailService;
 import server.stepmate.mission.MissionRepository;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
+import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.*;
+import server.stepmate.user.entity.DailyStep;
 import server.stepmate.user.entity.User;
 
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +37,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final MissionRepository missionRepository;
+    private final DailyStepRepository dailyStepRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
@@ -223,36 +226,35 @@ public class UserService {
         return accessTokenDto;
     }
 
-    public List<UserRankDto> getUserRanks(int page) {
-        PageRequest pageRequest = PageRequest.of(page, 25);
-        Page<User> userPage = userRepository.findAllOrderByMonthStepLevelNickname(pageRequest);
-        List<User> userList = userPage.getContent();
+    public List<Rank> getUserRanks() {
 
-        List<UserRankDto> userRankDtoList = getRankDtoList(userList);
+        List<User> userList = userRepository.findAllByOrderByMonthStepDesc();
+        List<Rank> userRankList = getRankList(userList);
 
-        assignRanks(userRankDtoList);
+        assignRanks(userRankList);
 
-        return userRankDtoList;
+        return userRankList;
     }
 
-    private  List<UserRankDto> getRankDtoList(List<User> userList) {
-        return userList.stream().map(User::getUserRankDto).toList();
+    private  List<Rank> getRankList(List<User> userList) {
+        return userList.stream().map(User::getUserRank).toList();
     }
 
-    private void assignRanks(List<UserRankDto> userRankDtoList) {
+
+    private void assignRanks(List<Rank> userRankList) {
         int Rank = 1;
         int currentRank = 1;
         int previousMonthStep = Integer.MAX_VALUE;
 
-        for (UserRankDto userRankDto : userRankDtoList) {
-            if (userRankDto.getMonthStep() == previousMonthStep) {
-                userRankDto.setRank(currentRank);
+        for (Rank rank : userRankList) {
+            if (rank.getMonthStep() == previousMonthStep) {
+                rank.updateRanking(currentRank);
             } else {
-                userRankDto.setRank(Rank);
+                rank.updateRanking(Rank);
                 currentRank = Rank;
             }
 
-            previousMonthStep = userRankDto.getMonthStep();
+            previousMonthStep = rank.getMonthStep();
             Rank++;
         }
 

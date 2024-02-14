@@ -29,4 +29,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u order by u.monthStep DESC, u.level DESC, u.nickname asc ")
     Page<User> findAllOrderByMonthStepLevelNickname(Pageable pageable);
+
+    List<User> findAllByOrderByMonthStepDesc();
 }
