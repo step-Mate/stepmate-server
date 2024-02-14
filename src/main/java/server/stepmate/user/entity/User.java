@@ -6,10 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.stepmate.mission.entity.UserMission;
+import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.UserAuthDto;
 import server.stepmate.user.dto.UserRankDto;
 import server.stepmate.user.entity.enumtypes.RoleType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static server.stepmate.user.entity.enumtypes.RoleType.*;
@@ -54,6 +56,10 @@ public class User {
 
     private Integer monthStep;
 
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<DailyStep> dailySteps = new ArrayList<>();
+
     private String title;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -88,11 +94,12 @@ public class User {
                 .build();
     }
 
-    public UserRankDto getUserRankDto() {
-        return UserRankDto.builder()
+    public Rank getUserRank() {
+        return Rank.builder()
                 .nickname(this.nickname)
                 .monthStep(this.monthStep)
                 .level(this.level)
+                .title(this.title)
                 .build();
     }
 
@@ -108,6 +115,10 @@ public class User {
         this.userMissions = userMissions;
     }
 
+    public void updateStep(Integer step) {
+        monthStep += step;
+        totalStep += step;
+    }
 
     public void calculateLevel() {
         this.level = this.XP / EXPERIENCE_FOR_LEVEL_UP;
