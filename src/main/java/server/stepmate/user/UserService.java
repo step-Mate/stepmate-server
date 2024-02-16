@@ -12,6 +12,9 @@ import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.config.security.jwt.JwtTokenProvider;
 import server.stepmate.email.EmailService;
 import server.stepmate.mission.MissionRepository;
+import server.stepmate.mission.MissionService;
+import server.stepmate.mission.UserMissionRepository;
+import server.stepmate.mission.dto.MissionDto;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
 import server.stepmate.rank.entity.Rank;
@@ -35,11 +38,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final MissionRepository missionRepository;
+    private final UserMissionRepository userMissionRepository;
     private final DailyStepRepository dailyStepRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
     private final RedisService redisService;
+    private final MissionService missionService;
 
     @Transactional
     public TokenDto signIn(SignInReq req) {
@@ -275,10 +280,24 @@ public class UserService {
         user.updateStep(steps);
     }
 
-    public void retrieveUserInfo(String nickname) {
+    public UserInfoDto retrieveUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+        return getUserInfoDto(user);
+    }
 
-
+    private UserInfoDto getUserInfoDto(User user) {
+        List<DailyStep> userDailyStep = dailyStepRepository.findUserDailyStep(user.getId());
+        List<DailyStepDto> dailyStepDtoList = userDailyStep.stream().map(DailyStep::getDailyStepDto).toList();
+        List<UserMission> userMissions = userMissionRepository.findTop5ByUserMission(user.getId());
+        List<MissionDto> missionDtoList = missionService.getMissionDtoList(userMissions);
+        return UserInfoDto.builder()
+                .nickname(user.getNickname())
+                .level(user.getLevel())
+                .totalStep(user.getTotalStep())
+                .title(user.getTitle())
+                .dailySteps(dailyStepDtoList)
+                .missions(missionDtoList)
+                .build();
     }
 }

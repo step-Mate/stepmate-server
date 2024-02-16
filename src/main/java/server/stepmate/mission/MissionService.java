@@ -45,7 +45,7 @@ public class MissionService {
                 .toList();
     }
 
-    private List<MissionDto> getMissionDtoList(List<UserMission> userMissions) {
+    public List<MissionDto> getMissionDtoList(List<UserMission> userMissions) {
         return userMissions.stream()
                 .map(UserMission::getMissionDto)
                 .collect(Collectors.toList());
