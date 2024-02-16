@@ -158,7 +158,7 @@ public class UserController {
                     })
     })
     @GetMapping("/email/verification-request")
-    public CommonResponse requestVerification(@RequestParam("email")String email) {
+    public CommonResponse requestVerification(@RequestParam("email") String email) {
 //        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
         userService.sendCodeToEmail(email);
         return responseService.getSuccessResponse();
@@ -185,14 +185,14 @@ public class UserController {
                     })
     })
     @GetMapping("/email/verifications")
-    public CommonResponse verificationEmail(@RequestParam("email")String email,
+    public CommonResponse verificationEmail(@RequestParam("email") String email,
                                             @RequestParam("authCode") String authCode) {
         userService.checkDuplicatedEmail(email);
         userService.verifiedCode(email, authCode);
         return responseService.getSuccessResponse();
     }
 
-    @Operation(summary = "이메일 인증으로 아이디 찾는 API",description = "이메일 인증을 통해 유저 아이디를 반환")
+    @Operation(summary = "이메일 인증으로 아이디 찾는 API", description = "이메일 인증을 통해 유저 아이디를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공",
                     content = {@Content(mediaType = "application/json",
@@ -234,7 +234,7 @@ public class UserController {
     }
 
 
-    @Operation(summary = "비밀번호 변경 API",description = "유저 아이디를 기준으로 비밀번호 변경")
+    @Operation(summary = "비밀번호 변경 API", description = "유저 아이디를 기준으로 비밀번호 변경")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공",
                     content = {@Content(mediaType = "application/json",
@@ -260,7 +260,7 @@ public class UserController {
     })
     @PatchMapping("/users/reset-password")
     public CommonResponse resetPassword(@RequestBody @Valid ChangePwdReq req, Errors errors) {
-        if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
+        if (errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
         userService.changePassword(req);
         return responseService.getSuccessResponse();
     }
@@ -276,7 +276,19 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @PostMapping("/users/save-step")
+    public CommonResponse saveStep(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(value = "steps") int steps) {
+        userService.saveStep(customUserDetails, steps);
+        return responseService.getSuccessResponse();
+    }
 
+    //미완성 rank작업 후에 다시 만들 예정
+    /*@GetMapping("/users/{nickname}")
+    public DataResponse retrieveUserInfo(@PathVariable("nickname") String nickname) {
+        userService.retrieveUserInfo(nickname);
+    }*/
+
+    //미완성
     /*@GetMapping("/myinfo")
     public DataResponse getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return responseService.getDataResponse()

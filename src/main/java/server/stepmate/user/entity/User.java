@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import server.stepmate.mission.entity.UserMission;
 import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.UserAuthDto;
-import server.stepmate.user.dto.UserRankDto;
 import server.stepmate.user.entity.enumtypes.RoleType;
 
 import java.util.ArrayList;
@@ -56,7 +55,9 @@ public class User {
 
     private Integer monthStep;
 
-    @OneToMany(mappedBy = "user")
+    private Integer todayStep;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<DailyStep> dailySteps = new ArrayList<>();
 
@@ -78,6 +79,7 @@ public class User {
                 .XP(0)
                 .totalStep(0)
                 .monthStep(0)
+                .todayStep(0)
                 .role(ROLE_USER)
                 .build();
     }
@@ -116,6 +118,7 @@ public class User {
     }
 
     public void updateStep(Integer step) {
+        todayStep += step;
         monthStep += step;
         totalStep += step;
     }

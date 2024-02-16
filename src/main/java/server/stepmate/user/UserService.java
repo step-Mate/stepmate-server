@@ -2,8 +2,6 @@ package server.stepmate.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +22,10 @@ import server.stepmate.user.entity.User;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -195,11 +193,11 @@ public class UserService {
 //        return getUserRankDtoList(userList);
 //    }
 
-    private List<UserRankDto> getUserRankDtoList(List<User> userList) {
-        return userList.stream()
-                .map(User::getUserRankDto)
-                .collect(Collectors.toList());
-    }
+//    private List<UserRankDto> getUserRankDtoList(List<User> userList) {
+//        return userList.stream()
+//                .map(User::getUserRankDto)
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     public void selectTitle(String title, CustomUserDetails customUserDetails) {
@@ -257,6 +255,30 @@ public class UserService {
             previousMonthStep = rank.getMonthStep();
             Rank++;
         }
+
+    }
+
+    @Transactional
+    public void saveStep(CustomUserDetails customUserDetails,int steps) {
+        LocalDate date = LocalDate.now();
+        User user = customUserDetails.getUser();
+        Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
+
+        if (dailyStepByDate.isPresent()) {
+            DailyStep dailyStep = dailyStepByDate.get();
+            dailyStep.addSteps(steps);
+        } else {
+            DailyStep dailyStep = DailyStep.createDailyStep(steps, user);
+            dailyStepRepository.save(dailyStep);
+        }
+
+        user.updateStep(steps);
+    }
+
+    public void retrieveUserInfo(String nickname) {
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
 
     }
 }
