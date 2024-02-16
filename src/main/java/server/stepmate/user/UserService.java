@@ -278,6 +278,7 @@ public class UserService {
         }
 
         user.updateStep(steps);
+        userRepository.save(user);
     }
 
     public UserInfoDto retrieveUserInfo(String nickname) {
