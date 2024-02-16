@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.stepmate.rank.dto.UserRankDto;
 
 @Getter
 @Builder
@@ -30,7 +31,24 @@ public class Rank {
 
     private Integer ranking;
 
+    private Integer rankChange;
+
     public void updateRanking(Integer ranking) {
         this.ranking = ranking;
+    }
+
+    public void calculateRankChange(Integer rankChange){
+        this.rankChange=rankChange;
+    }
+
+    public UserRankDto getUserRankDto() {
+        return UserRankDto.builder()
+                .nickname(this.nickname)
+                .level(this.level)
+                .monthStep(this.monthStep)
+                .title(this.title)
+                .ranking(this.ranking)
+                .rankChange(this.rankChange)
+                .build();
     }
 }
