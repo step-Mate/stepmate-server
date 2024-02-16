@@ -75,7 +75,7 @@ public class User {
                 .age(dto.getAge())
                 .height(dto.getHeight())
                 .weight(dto.getWeight())
-                .level(0)
+                .level(1)
                 .XP(0)
                 .totalStep(0)
                 .monthStep(0)
