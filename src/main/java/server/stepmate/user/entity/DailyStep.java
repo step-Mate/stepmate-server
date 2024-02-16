@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.stepmate.user.dto.DailyStepDto;
 
 import java.time.LocalDate;
 
@@ -32,6 +33,13 @@ public class DailyStep {
                 .steps(step)
                 .user(user)
                 .date(LocalDate.now()) //스케줄러를 몇시에 둘지 확정안남.. 확정 후 변경
+                .build();
+    }
+
+    public DailyStepDto getDailyStepDto() {
+        return DailyStepDto.builder()
+                .step(this.steps)
+                .date(this.date)
                 .build();
     }
 
