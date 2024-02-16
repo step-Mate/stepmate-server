@@ -282,11 +282,10 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-    //미완성 rank작업 후에 다시 만들 예정
-    /*@GetMapping("/users/{nickname}")
-    public DataResponse retrieveUserInfo(@PathVariable("nickname") String nickname) {
-        userService.retrieveUserInfo(nickname);
-    }*/
+    @GetMapping("/users/{nickname}")
+    public DataResponse<UserInfoDto> retrieveUserInfo(@PathVariable("nickname") String nickname) {
+        return responseService.getDataResponse(userService.retrieveUserInfo(nickname));
+    }
 
     //미완성
     /*@GetMapping("/myinfo")
