@@ -28,7 +28,11 @@ public class RankService {
 
         for (Rank rank : userRanks) {
             String nickname = rank.getNickname();
-            Integer rankNum = rankRepository.findRank(nickname)-rank.getRanking();
+            Integer oldRank = rankRepository.findRank(nickname);
+            if (oldRank == null) {
+                oldRank=rank.getRanking();
+            }
+            Integer rankNum = oldRank - rank.getRanking();
             rank.calculateRankChange(rankNum);
         }
 
