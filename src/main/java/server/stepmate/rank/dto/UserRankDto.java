@@ -1,4 +1,4 @@
-package server.stepmate.user.dto;
+package server.stepmate.rank.dto;
 
 import lombok.*;
 
@@ -9,7 +9,9 @@ import lombok.*;
 @Builder
 public class UserRankDto {
 
-    private Integer rank;
+    private Integer ranking;
+
+    private Integer rankChange;
 
     private Integer level;
 
@@ -17,6 +19,6 @@ public class UserRankDto {
 
     private Integer monthStep;
 
-    // 칭호, 뱃지 미정
+    private String title;
 
 }
