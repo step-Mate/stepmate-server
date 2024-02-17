@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(title = "step-mate",
         description = "step-mate App Back-End 연동 문서",
         version = "v1"),
-        security = @SecurityRequirement(name = "JWT"),
         servers = {
         @Server(url = "/", description = "Default Server url")
 }

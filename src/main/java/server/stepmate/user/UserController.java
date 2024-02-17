@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,7 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "닉네임 Validation API")
     @PostMapping("/users/nickname/validation")
     public CommonResponse getNickNameValidation(@RequestBody @Valid NickNameReq dto, Errors errors) {
 
@@ -223,7 +225,7 @@ public class UserController {
         return responseService.getDataResponse(userService.findByEmail(email));
     }
 
-
+    @Operation(summary = "유저 아이디 이메일 인증을 통해 비밀번호 찾는 API")
     @GetMapping("/users/findPwd")
     public CommonResponse findPwdByIdAndEmail(@RequestParam("userId") String userId,
                                               @RequestParam("email") String email,
@@ -265,23 +267,27 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "액세스 토큰 재발급 API")
     @GetMapping("/reissue")
     public DataResponse<AccessTokenDto> reissueToken(@RequestHeader("Authorization") String refreshToken) {
         return responseService.getDataResponse(userService.reissueAccessToken(refreshToken));
     }
 
+    @Operation(summary = "유저 회원 탈퇴 API", security = @SecurityRequirement(name = "JWT"))
     @PostMapping("/users/withdraw")
     public CommonResponse withdrawUser(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ValidatePwdDto dto) {
         userService.withdrawUser(customUserDetails, dto);
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "일일 걸음 저장 API", security = @SecurityRequirement(name="JWT"))
     @PostMapping("/users/save-step")
     public CommonResponse saveStep(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(value = "steps") int steps) {
         userService.saveStep(customUserDetails, steps);
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "유저 조회 API", security = @SecurityRequirement(name="JWT"))
     @GetMapping("/users/{nickname}")
     public DataResponse<UserInfoDto> retrieveUserInfo(@PathVariable("nickname") String nickname) {
         return responseService.getDataResponse(userService.retrieveUserInfo(nickname));
