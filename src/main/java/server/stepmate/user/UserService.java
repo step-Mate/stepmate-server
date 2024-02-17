@@ -221,6 +221,11 @@ public class UserService {
         userRepository.resetAllUserTodayStep();
     }
 
+    @Transactional
+    public void resetAllDailyStep() {
+        dailyStepRepository.deleteAll();
+    }
+
     public AccessTokenDto reissueAccessToken(String token) {
         String userId = jwtTokenProvider.getUsername(token);
         User user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(CustomExceptionStatus.INVALID_JWT));
