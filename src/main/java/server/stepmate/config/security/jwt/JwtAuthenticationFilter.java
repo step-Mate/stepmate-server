@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = jwtTokenProvider.resolveToken(request);
 
-        if(jwt==null) request.setAttribute("exception", CustomExceptionStatus.NOT_AUTHENTICATED_ACCOUNT);
+        if(jwt==null) request.setAttribute("exception", CustomExceptionStatus.NOT_AUTHENTICATED_ACCOUNT.getMessage());
         else if (jwtTokenProvider.validateToken(jwt,request)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
