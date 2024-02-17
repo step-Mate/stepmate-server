@@ -22,10 +22,4 @@ public class RankingBoardController {
     public DataResponse<List<UserRankDto>> getRankBoard(@RequestParam("page") Integer page) {
         return responseService.getDataResponse(rankService.getUserRank(page));
     }
-
-    @GetMapping("/test")
-    public CommonResponse test() {
-        rankService.updateRank();
-        return responseService.getSuccessResponse();
-    }
 }
