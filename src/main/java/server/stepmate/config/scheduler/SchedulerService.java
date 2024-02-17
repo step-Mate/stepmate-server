@@ -15,7 +15,7 @@ public class SchedulerService {
     private final UserService userService;
     private final RankService rankService;
 
-    @Scheduled(cron = "0 0 * * *")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void initDay() {
         rankService.updateRank();
         userService.resetAllUserTodayStep();
@@ -28,6 +28,7 @@ public class SchedulerService {
 
     @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 자정
     public void initMonth() {
+        userService.resetAllDailyStep();
         userService.resetAllUserMonthStep(); // 월 걸음수 초기화
         missionService.resetMonthlyUserMission(); // 월간 미션 초기화
     }
