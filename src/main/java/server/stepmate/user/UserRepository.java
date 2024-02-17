@@ -27,6 +27,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User u set u.monthStep=0")
     void resetAllUserMonthStep();
 
+    @Query("update User u set u.todayStep=0")
+    void resetAllUserTodayStep();
+
     @Query("select u from User u order by u.monthStep DESC, u.level DESC, u.nickname asc ")
     Page<User> findAllOrderByMonthStepLevelNickname(Pageable pageable);
 

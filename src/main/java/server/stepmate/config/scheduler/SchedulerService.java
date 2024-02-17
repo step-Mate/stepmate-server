@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import server.stepmate.mission.MissionService;
+import server.stepmate.rank.RankService;
 import server.stepmate.user.UserService;
 
 @Service
@@ -12,6 +13,13 @@ public class SchedulerService {
 
     private final MissionService missionService;
     private final UserService userService;
+    private final RankService rankService;
+
+    @Scheduled(cron = "0 0 * * *")
+    public void initDay() {
+        rankService.updateRank();
+        userService.resetAllUserTodayStep();
+    }
 
     @Scheduled(cron = "0 0 0 ? * MON") // 매주 월요일 자정
     public void initWeek() {
