@@ -61,6 +61,10 @@ public class User {
     @Builder.Default
     private List<DailyStep> dailySteps = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Friendship> friendships = new ArrayList<>();
+
     private String title;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

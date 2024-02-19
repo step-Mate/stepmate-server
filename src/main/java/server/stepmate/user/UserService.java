@@ -20,6 +20,7 @@ import server.stepmate.mission.entity.UserMission;
 import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.*;
 import server.stepmate.user.entity.DailyStep;
+import server.stepmate.user.entity.Friendship;
 import server.stepmate.user.entity.User;
 
 import java.security.NoSuchAlgorithmException;
@@ -40,6 +41,7 @@ public class UserService {
     private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
     private final DailyStepRepository dailyStepRepository;
+    private final FriendshipRepository friendshipRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
@@ -310,5 +312,18 @@ public class UserService {
                 .dailySteps(dailyStepDtoList)
                 .missions(missionDtoList)
                 .build();
+    }
+
+    @Transactional
+    public void addFriend(String nickname, CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        User friend = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomException(CustomExceptionStatus.USER_NOT_VALID));
+
+        Friendship friendship = Friendship.builder()
+                .user(user)
+                .friend(friend)
+                .build();
+
+        friendshipRepository.save(friendship);
     }
 }

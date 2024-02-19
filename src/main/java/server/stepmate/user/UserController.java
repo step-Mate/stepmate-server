@@ -29,19 +29,24 @@ public class UserController {
     private final ResponseService responseService;
 
 
-    @Operation(summary = "일일 걸음 저장 API", security = @SecurityRequirement(name="JWT"))
+    @Operation(summary = "일일 걸음 저장 API", security = @SecurityRequirement(name = "JWT"))
     @PostMapping("/users/save-step")
     public CommonResponse saveStep(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(value = "steps") int steps) {
         userService.saveStep(customUserDetails, steps);
         return responseService.getSuccessResponse();
     }
 
-    @Operation(summary = "유저 조회 API", security = @SecurityRequirement(name="JWT"))
+    @Operation(summary = "유저 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/users/{nickname}")
     public DataResponse<UserInfoDto> retrieveUserInfo(@PathVariable("nickname") String nickname) {
         return responseService.getDataResponse(userService.retrieveUserInfo(nickname));
     }
 
+    @GetMapping("/users/{nickname}/friends")
+    public CommonResponse addFriend(@PathVariable("nickname") String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.addFriend(nickname, customUserDetails);
+        return responseService.getSuccessResponse();
+    }
     //미완성
     /*@GetMapping("/myinfo")
     public DataResponse getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
