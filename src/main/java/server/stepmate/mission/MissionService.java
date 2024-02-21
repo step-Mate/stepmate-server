@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import server.stepmate.config.response.exception.CustomException;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.mission.dto.MissionDto;
 import server.stepmate.mission.dto.MissionTitleDto;
@@ -25,10 +24,9 @@ public class MissionService {
     private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
 
-    public List<MissionDto> getHomeMission(CustomUserDetails customUserDetails) {
-        List<MissionDto> missionDtoList =new ArrayList<>();
+    public List<MissionDto> getMissions(CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
-        List<UserMission> userMissions = userMissionRepository.findTop5ByUserMission(user.getId());
+        List<UserMission> userMissions = userMissionRepository.findAllById(user.getId());
 
         return getMissionDtoList(userMissions);
     }
@@ -49,6 +47,12 @@ public class MissionService {
         return userMissions.stream()
                 .map(UserMission::getMissionDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void completeMission(String title, CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        userMissionRepository.updateUserMissionByMission_Title(user.getId(),title);
     }
 
     @Transactional
