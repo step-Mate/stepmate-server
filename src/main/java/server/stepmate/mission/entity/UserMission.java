@@ -32,10 +32,11 @@ public class UserMission {
 
     public MissionDto getMissionDto() {
         return MissionDto.builder()
-                .id(this.id)
+                .title(this.mission.getTitle())
                 .contents(this.mission.getContents())
                 .goal(this.mission.getGoal())
-                .reward(this.mission.getReward())
+                .isComplete(this.isComplete)
+                .missionType(this.mission.getMissionType())
                 .build();
     }
 
