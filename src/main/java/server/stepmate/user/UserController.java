@@ -43,12 +43,14 @@ public class UserController {
         return responseService.getDataResponse(userService.retrieveUserInfo(nickname));
     }
 
-    @GetMapping("/users/{nickname}/friends")
+    @Operation(summary = "유저 친구 추가 API", security = @SecurityRequirement(name = "JWT"))
+    @PostMapping("/users/{nickname}/friends")
     public CommonResponse addFriend(@PathVariable("nickname") String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         userService.addFriend(nickname, customUserDetails);
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "유저 친구 목록 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/users/friends")
     public DataResponse<List<FriendDto>> getFriendList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return responseService.getDataResponse(userService.getFriendList(customUserDetails));

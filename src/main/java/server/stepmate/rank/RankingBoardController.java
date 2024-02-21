@@ -31,6 +31,7 @@ public class RankingBoardController {
         return responseService.getDataResponse(rankService.getUserRank(page));
     }
 
+    @Operation(summary = "랭킹보드 친구 랭킹 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/rank-board/friends")
     public DataResponse<List<FriendRankDto>> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return responseService.getDataResponse(rankService.getFriendRankList(customUserDetails));
