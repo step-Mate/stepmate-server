@@ -92,7 +92,6 @@ public class RankService {
         friendRankDtoList.sort(Comparator.comparingInt(FriendRankDto::getMonthStep)
                 .reversed()
                 .thenComparingInt(FriendRankDto::getLevel)
-                .reversed()
                 .thenComparing(FriendRankDto::getNickname));
 
         assignRanks(friendRankDtoList);
