@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findTop100ByMonthStep();
 
     @Query("update User u set u.monthStep=0")
+    @Modifying(clearAutomatically = true)
     void resetAllUserMonthStep();
 
     @Query("update User u set u.todayStep=0")
+    @Modifying
     void resetAllUserTodayStep();
 
     @Query("select u from User u order by u.monthStep DESC, u.level DESC, u.nickname asc ")
