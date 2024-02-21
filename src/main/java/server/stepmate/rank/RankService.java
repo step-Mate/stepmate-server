@@ -6,10 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.stepmate.config.security.authentication.CustomUserDetails;
+import server.stepmate.rank.dto.FriendRankDto;
 import server.stepmate.rank.dto.UserRankDto;
 import server.stepmate.rank.entity.Rank;
+import server.stepmate.user.FriendshipRepository;
 import server.stepmate.user.UserService;
+import server.stepmate.user.entity.Friendship;
+import server.stepmate.user.entity.User;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -20,6 +27,7 @@ public class RankService {
 
     private final UserService userService;
     private final RankRepository rankRepository;
+    private final FriendshipRepository friendshipRepository;
 
     @Transactional
     public void updateRank() {
@@ -53,6 +61,62 @@ public class RankService {
         return userRank.stream()
                 .map(Rank::getUserRankDto)
                 .toList();
+    }
+
+    public List<FriendRankDto> getFriendRankList(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        List<Friendship> friendships = friendshipRepository.findAllByUser(user);
+        List<FriendRankDto> friendRankDtoList = new ArrayList<>();
+        for (Friendship friendship : friendships) {
+            User friend = friendship.getFriend();
+
+            FriendRankDto friendRankDto = FriendRankDto.builder()
+                    .level(friend.getLevel())
+                    .nickname(friend.getNickname())
+                    .monthStep(friend.getMonthStep())
+                    .title(friend.getTitle())
+                    .build();
+
+            friendRankDtoList.add(friendRankDto);
+        }
+
+        FriendRankDto friendRankDto = FriendRankDto.builder()
+                .level(user.getLevel())
+                .nickname(user.getNickname())
+                .monthStep(user.getMonthStep())
+                .title(user.getTitle())
+                .build();
+
+        friendRankDtoList.add(friendRankDto);
+
+        friendRankDtoList.sort(Comparator.comparingInt(FriendRankDto::getMonthStep)
+                .reversed()
+                .thenComparingInt(FriendRankDto::getLevel)
+                .reversed()
+                .thenComparing(FriendRankDto::getNickname));
+
+        assignRanks(friendRankDtoList);
+
+        return friendRankDtoList;
+    }
+
+    private void assignRanks(List<FriendRankDto> friendRankDtoList) {
+        int Rank = 1;
+        int currentRank = 1;
+        int previousMonthStep = Integer.MAX_VALUE;
+
+        for (FriendRankDto friendRankDto : friendRankDtoList) {
+            if (friendRankDto.getMonthStep() == previousMonthStep) {
+                friendRankDto.setRanking(currentRank);
+            } else {
+                friendRankDto.setRanking(Rank);
+                currentRank = Rank;
+            }
+
+            previousMonthStep = friendRankDto.getMonthStep();
+            Rank++;
+        }
+
     }
 
 }

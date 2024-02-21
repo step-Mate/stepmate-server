@@ -3,12 +3,15 @@ package server.stepmate.rank;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import server.stepmate.config.response.CommonResponse;
 import server.stepmate.config.response.DataResponse;
 import server.stepmate.config.response.ResponseService;
+import server.stepmate.config.security.authentication.CustomUserDetails;
+import server.stepmate.rank.dto.FriendRankDto;
 import server.stepmate.rank.dto.UserRankDto;
 
 import java.util.List;
@@ -26,5 +29,10 @@ public class RankingBoardController {
     @GetMapping("/rank-board")
     public DataResponse<List<UserRankDto>> getRankBoard(@RequestParam("page") Integer page) {
         return responseService.getDataResponse(rankService.getUserRank(page));
+    }
+
+    @GetMapping("/rank-board/friends")
+    public DataResponse<List<FriendRankDto>> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return responseService.getDataResponse(rankService.getFriendRankList(customUserDetails));
     }
 }
