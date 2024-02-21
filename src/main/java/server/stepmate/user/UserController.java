@@ -3,6 +3,7 @@ package server.stepmate.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,13 +38,19 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-    @Operation(summary = "유저 조회 API", security = @SecurityRequirement(name = "JWT"))
+    @Operation(summary = "유저 조회 API", security = @SecurityRequirement(name = "JWT"), responses = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공", content = @Content(schema = @Schema(implementation = UserInfoDto.class))),
+            @ApiResponse(responseCode = "404", description = "유효한 사용자가 없습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+    })
     @GetMapping("/users/{nickname}")
-    public DataResponse<UserInfoDto> retrieveUserInfo(@PathVariable("nickname") String nickname) {
-        return responseService.getDataResponse(userService.retrieveUserInfo(nickname));
+    public UserInfoDto retrieveUserInfo(@PathVariable("nickname") String nickname) {
+        return userService.retrieveUserInfo(nickname);
     }
 
-    @Operation(summary = "유저 친구 추가 API", security = @SecurityRequirement(name = "JWT"))
+    @Operation(summary = "유저 친구 추가 API", security = @SecurityRequirement(name = "JWT"), responses = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "404", description = "유효한 사용자가 없습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+    })
     @PostMapping("/users/{nickname}/friends")
     public CommonResponse addFriend(@PathVariable("nickname") String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         userService.addFriend(nickname, customUserDetails);
@@ -52,8 +59,8 @@ public class UserController {
 
     @Operation(summary = "유저 친구 목록 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/users/friends")
-    public DataResponse<List<FriendDto>> getFriendList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return responseService.getDataResponse(userService.getFriendList(customUserDetails));
+    public List<FriendDto> getFriendList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return userService.getFriendList(customUserDetails);
     }
 
 
