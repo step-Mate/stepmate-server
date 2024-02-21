@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.stepmate.mission.entity.enumtypes.MissionType;
 
 @Getter
 @NoArgsConstructor
@@ -11,12 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MissionDto {
 
-    private Long id;
+    private String title;
 
     private String contents;
 
     private Integer goal;
 
-    private Integer reward;
+    private boolean isComplete;
+
+    private MissionType missionType;
 
 }
