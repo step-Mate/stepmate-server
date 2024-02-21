@@ -38,7 +38,7 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-    @Operation(summary = "유저 조회 API", security = @SecurityRequirement(name = "JWT"), responses = {
+    @Operation(summary = "유저 조회 API",description = "missions는 완료한 미션 5개입니다.", security = @SecurityRequirement(name = "JWT"), responses = {
             @ApiResponse(responseCode = "200", description = "요청에 성공", content = @Content(schema = @Schema(implementation = UserInfoDto.class))),
             @ApiResponse(responseCode = "404", description = "유효한 사용자가 없습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
