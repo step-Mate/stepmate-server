@@ -326,4 +326,21 @@ public class UserService {
 
         friendshipRepository.save(friendship);
     }
+
+    public List<FriendDto> getFriendList(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        List<Friendship> friendships = friendshipRepository.findAllByUser(user);
+        List<FriendDto> friendDtoList = new ArrayList<>();
+        for (Friendship friendship : friendships) {
+            User friend = friendship.getFriend();
+            FriendDto friendDto = new FriendDto();
+
+            friendDto.setLevel(friend.getLevel());
+            friendDto.setNickname(friendDto.getNickname());
+            friendDto.setTitle(friend.getTitle());
+
+            friendDtoList.add(friendDto);
+        }
+        return friendDtoList;
+    }
 }

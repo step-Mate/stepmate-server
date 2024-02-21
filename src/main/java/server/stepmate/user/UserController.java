@@ -19,6 +19,7 @@ import server.stepmate.config.response.exception.ValidationExceptionProvider;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.email.EmailService;
 import server.stepmate.user.dto.*;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -47,6 +48,13 @@ public class UserController {
         userService.addFriend(nickname, customUserDetails);
         return responseService.getSuccessResponse();
     }
+
+    @GetMapping("/users/friends")
+    public DataResponse<List<FriendDto>> getFriendList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return responseService.getDataResponse(userService.getFriendList(customUserDetails));
+    }
+
+
     //미완성
     /*@GetMapping("/myinfo")
     public DataResponse getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
