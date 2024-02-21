@@ -36,5 +36,17 @@ public class MissionController {
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "미션 동기화 API", security = @SecurityRequirement(name = "JWT"))
+    @GetMapping("/missions")
+    public List<MissionDto> getMissions(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return missionService.getMissions(customUserDetails);
+    }
+
+    @Operation(summary = "미션 완료 API", security = @SecurityRequirement(name = "JWT"))
+    @PostMapping("/missions/complete")
+    public CommonResponse completeMission(@RequestParam String title, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        missionService.completeMission(title, customUserDetails);
+        return responseService.getSuccessResponse();
+    }
 
 }
