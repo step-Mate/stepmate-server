@@ -127,11 +127,10 @@ public class User {
         totalStep += step;
     }
 
-    public void calculateLevel() {
-        this.level = this.XP / EXPERIENCE_FOR_LEVEL_UP;
+    public void updateXp(Integer xp) {
+        this.XP+=xp;
+        this.level += this.XP / EXPERIENCE_FOR_LEVEL_UP;
+        this.XP = this.XP % EXPERIENCE_FOR_LEVEL_UP;
     }
 
-    public Integer getCurrentXP() {
-        return this.XP % EXPERIENCE_FOR_LEVEL_UP;
-    }
 }
