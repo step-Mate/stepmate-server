@@ -17,6 +17,7 @@ import server.stepmate.mission.UserMissionRepository;
 import server.stepmate.mission.dto.MissionDto;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
+import server.stepmate.rank.RankRepository;
 import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.*;
 import server.stepmate.user.entity.DailyStep;
@@ -41,6 +42,7 @@ public class UserService {
     private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
     private final DailyStepRepository dailyStepRepository;
+    private final RankRepository rankRepository;
     private final FriendshipRepository friendshipRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -304,7 +306,11 @@ public class UserService {
         List<DailyStepDto> dailyStepDtoList = userDailyStep.stream().map(DailyStep::getDailyStepDto).toList();
         List<UserMission> userMissions = userMissionRepository.findTop5ByUserMission(user.getId());
         List<MissionDto> missionDtoList = missionService.getMissionDtoList(userMissions);
+        Rank rank = rankRepository.findByNickname(user.getNickname()).orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
         return UserInfoDto.builder()
+                .ranking(rank.getRanking())
+                .rankChange(rank.getRankChange())
                 .nickname(user.getNickname())
                 .level(user.getLevel())
                 .totalStep(user.getTotalStep())

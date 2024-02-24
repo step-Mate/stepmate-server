@@ -17,6 +17,10 @@ import java.util.List;
 @Builder
 public class UserInfoDto {
 
+    private Integer ranking;
+
+    private Integer rankChange;
+
     private String nickname;
 
     private Integer level;
