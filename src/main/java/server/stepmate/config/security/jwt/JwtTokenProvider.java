@@ -23,7 +23,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1000L; // 1시간
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 30 * 24 * 60 * 60 * 1000L; // 30일
     private final UserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
