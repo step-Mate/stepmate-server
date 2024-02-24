@@ -14,9 +14,10 @@ import server.stepmate.email.EmailService;
 import server.stepmate.mission.MissionRepository;
 import server.stepmate.mission.MissionService;
 import server.stepmate.mission.UserMissionRepository;
-import server.stepmate.mission.dto.MissionDto;
+import server.stepmate.mission.dto.MissionProgressDto;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
+import server.stepmate.mission.entity.enumtypes.MissionType;
 import server.stepmate.rank.RankRepository;
 import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.*;
@@ -330,7 +331,7 @@ public class UserService {
                 .totalStep(user.getTotalStep())
                 .title(user.getTitle())
                 .dailySteps(dailyStepDtoList)
-                .missions(missionDtoList)
+                .missions(missionProgressDtoListDtoList)
                 .build();
     }
 
