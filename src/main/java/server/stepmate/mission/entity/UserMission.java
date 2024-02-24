@@ -39,6 +39,7 @@ public class UserMission {
                 .contents(this.mission.getContents())
                 .missionType(this.mission.getMissionType())
                 .isComplete(this.isComplete)
+                .currentValue(this.currentValue)
                 .goal(this.mission.getGoal())
                 .build();
     }

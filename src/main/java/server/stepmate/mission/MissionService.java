@@ -8,6 +8,7 @@ import server.stepmate.config.response.exception.CustomException;
 import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.mission.dto.MissionDto;
+import server.stepmate.mission.dto.MissionProgressDto;
 import server.stepmate.mission.dto.MissionTitleDto;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
@@ -47,6 +48,12 @@ public class MissionService {
         return titleList.stream()
                 .map(MissionTitleDto::new)
                 .toList();
+    }
+
+    public List<MissionProgressDto> getMissionProgressDtoList(List<UserMission> userMissions) {
+        return userMissions.stream()
+                .map(UserMission::getMissionProgressDto)
+                .collect(Collectors.toList());
     }
 
     public List<MissionDto> getMissionDtoList(List<UserMission> userMissions) {

@@ -10,7 +10,7 @@ import server.stepmate.mission.entity.enumtypes.MissionType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MissionDto {
+public class MissionProgressDto {
 
     private String title;
 
@@ -21,8 +21,6 @@ public class MissionDto {
     private Integer goal;
 
     private Integer currentValue;
-
-    private boolean isComplete;
 
     private MissionType missionType;
 
