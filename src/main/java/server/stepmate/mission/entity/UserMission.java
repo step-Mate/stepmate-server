@@ -18,7 +18,7 @@ import server.stepmate.user.entity.User;
 public class UserMission {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
