@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.stepmate.mission.dto.MissionDto;
+import server.stepmate.mission.dto.MissionProgressDto;
 import server.stepmate.user.entity.User;
 
 @Getter
@@ -28,7 +29,7 @@ public class UserMission {
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
-    private Integer current;
+    private Integer currentValue;
 
     private boolean isComplete;
 
@@ -42,6 +43,16 @@ public class UserMission {
                 .currentValue(this.currentValue)
                 .goal(this.mission.getGoal())
                 .build();
+    }
+
+    public MissionProgressDto getMissionProgressDto() {
+        return MissionProgressDto.builder()
+                .title(this.mission.getTitle())
+                .designation(this.mission.getDesignation())
+                .contents(this.mission.getContents())
+                .missionType(this.mission.getMissionType())
+                .currentValue(this.currentValue)
+                .goal(this.mission.getGoal()).build();
     }
 
 }
