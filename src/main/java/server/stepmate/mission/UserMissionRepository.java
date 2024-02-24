@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserMissionRepository extends JpaRepository<UserMission, Long> {
 
-    @Query("SELECT i from UserMission i WHERE i.user.id = :id and i.isComplete = true order by i.mission.id desc ")
+    @Query("SELECT i from UserMission i WHERE i.user.id = :id and i.isComplete = false order by i.mission.id desc ")
     List<UserMission> findTop5ByUserMission(@Param("id") Long id);
 
     @Query("update UserMission u set u.isComplete=false where u.mission.missionCycle='WEEKLY'")
@@ -21,8 +21,8 @@ public interface UserMissionRepository extends JpaRepository<UserMission, Long> 
     @Modifying(clearAutomatically = true)
     void resetUserMissionTypeMonthly();
 
-    @Query("select u.mission.title from UserMission u where u.user.id=:id and u.isComplete = true")
-    List<String> findByUserMissionTitle(@Param("id") Long id);
+    @Query("select u.mission.designation from UserMission u where u.user.id=:id and u.isComplete = true")
+    List<String> findByUserMissionDesignation(@Param("id") Long id);
 
     @Query("select u from UserMission u where u.user.id = :id")
     List<UserMission> findAllById(@Param("id") Long id);
