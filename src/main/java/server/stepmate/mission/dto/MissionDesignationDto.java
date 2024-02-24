@@ -6,6 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MissionTitleDto {
-    private String title;
+public class MissionDesignationDto {
+    private String designation;
 }

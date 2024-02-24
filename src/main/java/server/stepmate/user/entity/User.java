@@ -113,7 +113,7 @@ public class User {
         this.password = password;
     }
 
-    public void changeTitle(String title) {
+    public void changeDesignation(String title) {
         this.title = title;
     }
 

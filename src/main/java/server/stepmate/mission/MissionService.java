@@ -9,14 +9,12 @@ import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.mission.dto.MissionDto;
 import server.stepmate.mission.dto.MissionProgressDto;
-import server.stepmate.mission.dto.MissionTitleDto;
+import server.stepmate.mission.dto.MissionDesignationDto;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
 import server.stepmate.user.UserRepository;
-import server.stepmate.user.UserService;
 import server.stepmate.user.entity.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,15 +36,15 @@ public class MissionService {
         return getMissionDtoList(userMissions);
     }
 
-    public List<MissionTitleDto> getUserTitle(CustomUserDetails customUserDetails) {
+    public List<MissionDesignationDto> getUserDesignations(CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
-        List<String> titleList = userMissionRepository.findByUserMissionTitle(user.getId());
+        List<String> titleList = userMissionRepository.findByUserMissionDesignation(user.getId());
         return getMissionTitleDtoList(titleList);
     }
 
-    private  List<MissionTitleDto> getMissionTitleDtoList(List<String> titleList) {
+    private  List<MissionDesignationDto> getMissionTitleDtoList(List<String> titleList) {
         return titleList.stream()
-                .map(MissionTitleDto::new)
+                .map(MissionDesignationDto::new)
                 .toList();
     }
 

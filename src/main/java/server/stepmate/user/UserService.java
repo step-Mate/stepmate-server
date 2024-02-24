@@ -211,9 +211,9 @@ public class UserService {
 //    }
 
     @Transactional
-    public void selectTitle(String title, CustomUserDetails customUserDetails) {
+    public void selectDesignation(String designation, CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
-        user.changeTitle(title);
+        user.changeDesignation(designation);
         userRepository.save(user);
     }
 

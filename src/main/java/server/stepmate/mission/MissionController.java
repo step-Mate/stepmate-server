@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import server.stepmate.config.response.CommonResponse;
-import server.stepmate.config.response.DataResponse;
 import server.stepmate.config.response.ResponseService;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.mission.dto.MissionDto;
-import server.stepmate.mission.dto.MissionTitleDto;
+import server.stepmate.mission.dto.MissionDesignationDto;
 import server.stepmate.user.UserService;
 
 import java.util.List;
@@ -24,15 +23,15 @@ public class MissionController {
     private final UserService userService;
 
     @Operation(summary = "보유하고 있는 칭호 조회 API", security = @SecurityRequirement(name = "JWT"))
-    @GetMapping("/titles")
-    public List<MissionTitleDto> getUserTitles(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return missionService.getUserTitle(customUserDetails);
+    @GetMapping("/designations")
+    public List<MissionDesignationDto> getUserDesignations(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return missionService.getUserDesignations(customUserDetails);
     }
 
     @Operation(summary = "칭호 선택 API", security = @SecurityRequirement(name = "JWT"))
-    @PatchMapping("/select-title")
-    public CommonResponse selectTitle(@RequestBody MissionTitleDto req, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        userService.selectTitle(req.getTitle(), customUserDetails);
+    @PatchMapping("/select-designation")
+    public CommonResponse selectTitle(@RequestBody MissionDesignationDto req, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.selectDesignation(req.getDesignation(), customUserDetails);
         return responseService.getSuccessResponse();
     }
 
