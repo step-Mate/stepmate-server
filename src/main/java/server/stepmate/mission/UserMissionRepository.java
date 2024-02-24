@@ -27,6 +27,9 @@ public interface UserMissionRepository extends JpaRepository<UserMission, Long> 
     @Query("select u from UserMission u where u.user.id = :id")
     List<UserMission> findAllById(@Param("id") Long id);
 
+    @Query("select u from UserMission u where u.user.id = :id and u.isComplete = false")
+    List<UserMission> findAllProgressMissionById(@Param("id") Long id);
+
     @Query("update UserMission u set u.isComplete=true where u.user.id=:id and u.mission.title=:title")
     @Modifying(clearAutomatically = true)
     void updateUserMissionByMission_Title(@Param("id") Long id, @Param("title") String title);

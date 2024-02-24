@@ -33,6 +33,15 @@ public class UserMission {
 
     private boolean isComplete;
 
+    public void missionComplete() {
+        this.isComplete = true;
+        this.currentValue = mission.getGoal();
+    }
+
+    public void addCurrentValue(Integer currentValue) {
+        this.currentValue += currentValue;
+    }
+
     public MissionDto getMissionDto() {
         return MissionDto.builder()
                 .title(this.mission.getTitle())

@@ -291,6 +291,18 @@ public class UserService {
             dailyStepRepository.save(dailyStep);
         }
 
+        List<UserMission> userMissionList = userMissionRepository.findAllProgressMissionById(user.getId());
+        for (UserMission userMission : userMissionList) {
+
+            Mission mission = userMission.getMission();
+            if (mission.getMissionType() == MissionType.STEP) {
+                userMission.addCurrentValue(steps);
+                if (userMission.getCurrentValue() >= mission.getGoal()) {
+                    userMission.missionComplete();
+                }
+            }
+        }
+
         user.updateStep(steps);
         userRepository.save(user);
     }
