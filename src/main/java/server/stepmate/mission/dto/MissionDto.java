@@ -14,6 +14,8 @@ public class MissionDto {
 
     private String title;
 
+    private String designation;
+
     private String contents;
 
     private Integer goal;

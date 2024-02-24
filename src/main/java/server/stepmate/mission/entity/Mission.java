@@ -19,6 +19,8 @@ public class Mission {
 
     private String title;
 
+    private String designation;
+
     @Enumerated(EnumType.STRING)
     private MissionType missionType; //STEP,CALORIE
 

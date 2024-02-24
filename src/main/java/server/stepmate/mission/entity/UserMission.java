@@ -33,7 +33,10 @@ public class UserMission {
     public MissionDto getMissionDto() {
         return MissionDto.builder()
                 .title(this.mission.getTitle())
+                .designation(this.mission.getDesignation())
                 .contents(this.mission.getContents())
+                .missionType(this.mission.getMissionType())
+                .isComplete(this.isComplete)
                 .goal(this.mission.getGoal())
                 .isComplete(this.isComplete)
                 .missionType(this.mission.getMissionType())
