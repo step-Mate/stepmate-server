@@ -28,6 +28,8 @@ public class UserMission {
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
+    private Integer current;
+
     private boolean isComplete;
 
     public MissionDto getMissionDto() {
@@ -38,8 +40,6 @@ public class UserMission {
                 .missionType(this.mission.getMissionType())
                 .isComplete(this.isComplete)
                 .goal(this.mission.getGoal())
-                .isComplete(this.isComplete)
-                .missionType(this.mission.getMissionType())
                 .build();
     }
 
