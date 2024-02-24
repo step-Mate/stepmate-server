@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.stepmate.config.response.exception.CustomException;
+import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.rank.dto.FriendRankDto;
 import server.stepmate.rank.dto.UserRankDto;
@@ -118,4 +120,9 @@ public class RankService {
 
     }
 
+    public UserRankDto getMyInfoRank(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        Rank rank = rankRepository.findByNickname(user.getNickname()).orElseThrow(() -> new CustomException(CustomExceptionStatus.USER_NOT_VALID));
+        return rank.getUserRankDto();
+    }
 }

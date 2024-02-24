@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import server.stepmate.rank.entity.Rank;
 
+import java.util.Optional;
+
 public interface RankRepository extends JpaRepository<Rank,Long> {
 
     @Query("select r from Rank r order by r.ranking asc")
@@ -14,4 +16,6 @@ public interface RankRepository extends JpaRepository<Rank,Long> {
 
     @Query("select r.ranking from Rank r where r.nickname=:nickname")
     Integer findRank(@Param("nickname") String nickname);
+
+    Optional<Rank> findByNickname(String nickname);
 }
