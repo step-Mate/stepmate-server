@@ -25,8 +25,8 @@ public class MissionController {
 
     @Operation(summary = "보유하고 있는 칭호 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/titles")
-    public DataResponse<List<MissionTitleDto>> getUserTitles(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return responseService.getDataResponse(missionService.getUserTitle(customUserDetails));
+    public List<MissionTitleDto> getUserTitles(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return missionService.getUserTitle(customUserDetails);
     }
 
     @Operation(summary = "칭호 선택 API", security = @SecurityRequirement(name = "JWT"))

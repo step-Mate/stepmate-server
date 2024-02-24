@@ -20,21 +20,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RankingBoardController {
 
-    private final ResponseService responseService;
     private final RankService rankService;
 
     @Operation(summary = "랭킹보드 랭킹 조회 API",
             description = "page : 0번 부터 시작 rankChange : 전일대비 순위 변화률 양수면 순위가 높아지고 음수면 순위가 떨어지는 의미",
             security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/rank-board")
-    public DataResponse<List<UserRankDto>> getRankBoard(@RequestParam("page") Integer page) {
-        return responseService.getDataResponse(rankService.getUserRank(page));
+    public List<UserRankDto> getRankBoard(@RequestParam("page") Integer page) {
+        return rankService.getUserRank(page);
     }
 
     @Operation(summary = "랭킹보드 친구 랭킹 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/rank-board/friends")
-    public DataResponse<List<FriendRankDto>> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return responseService.getDataResponse(rankService.getFriendRankList(customUserDetails));
+    public List<FriendRankDto> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return rankService.getFriendRankList(customUserDetails);
     }
 
     @Operation(summary = "랭킹보드 상단 바 내 정보 조회 API", security = @SecurityRequirement(name = "JWT"))
