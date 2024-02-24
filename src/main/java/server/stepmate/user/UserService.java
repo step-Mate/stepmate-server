@@ -102,6 +102,7 @@ public class UserService {
                     .user(user)
                     .mission(mission)
                     .isComplete(false)
+                    .currentValue(0)
                     .build();
             userMissions.add(userMission);
         }
@@ -299,6 +300,7 @@ public class UserService {
                 userMission.addCurrentValue(steps);
                 if (userMission.getCurrentValue() >= mission.getGoal()) {
                     userMission.missionComplete();
+                    user.updateXp(mission.getReward());
                 }
             }
         }
@@ -317,7 +319,7 @@ public class UserService {
         List<DailyStep> userDailyStep = dailyStepRepository.findUserDailyStep(user.getId());
         List<DailyStepDto> dailyStepDtoList = userDailyStep.stream().map(DailyStep::getDailyStepDto).toList();
         List<UserMission> userMissions = userMissionRepository.findTop5ByUserMission(user.getId());
-        List<MissionDto> missionDtoList = missionService.getMissionDtoList(userMissions);
+        List<MissionProgressDto> missionProgressDtoListDtoList = missionService.getMissionProgressDtoList(userMissions);
         Rank rank = rankRepository.findByNickname(user.getNickname()).orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
 
         return UserInfoDto.builder()
