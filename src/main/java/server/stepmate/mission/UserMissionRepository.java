@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserMissionRepository extends JpaRepository<UserMission, Long> {
 
-    @Query("SELECT i from UserMission i WHERE i.user.id = :id and i.isComplete = false order by i.mission.id desc ")
+    @Query("SELECT i from UserMission i WHERE i.user.id = :id and i.isComplete = false order by i.mission.id desc limit 5")
     List<UserMission> findTop5ByUserMission(@Param("id") Long id);
 
     @Query("update UserMission u set u.isComplete=false, u.currentValue=0 where u.mission.missionCycle='WEEKLY'")
