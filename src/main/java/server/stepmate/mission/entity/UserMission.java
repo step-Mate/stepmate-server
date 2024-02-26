@@ -29,17 +29,19 @@ public class UserMission {
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
-    private Integer currentValue;
+    private Integer stepCurrentValue;
+
+    private Integer calorieCurrentValue;
 
     private boolean isComplete;
 
     public void missionComplete() {
         this.isComplete = true;
-        this.currentValue = mission.getGoal();
     }
 
-    public void addCurrentValue(Integer currentValue) {
-        this.currentValue += currentValue;
+    public void addCurrentValue(Integer stepValue, Integer calorieValue ) {
+        this.stepCurrentValue += stepValue;
+        this.calorieCurrentValue += calorieValue;
     }
 
     public MissionDto getMissionDto() {
@@ -48,6 +50,8 @@ public class UserMission {
                 .designation(this.mission.getDesignation())
                 .contents(this.mission.getContents())
                 .missionType(this.mission.getMissionType())
+                .stepCurrentValue(this.stepCurrentValue)
+                .calorieCurrentValue(this.calorieCurrentValue)
                 .isComplete(this.isComplete)
                 .currentValue(this.currentValue)
                 .goal(this.mission.getGoal())
@@ -60,8 +64,10 @@ public class UserMission {
                 .designation(this.mission.getDesignation())
                 .contents(this.mission.getContents())
                 .missionType(this.mission.getMissionType())
-                .currentValue(this.currentValue)
-                .goal(this.mission.getGoal()).build();
+                .stepCurrentValue(this.stepCurrentValue)
+                .calorieCurrentValue(this.calorieCurrentValue)
+                .goal(this.mission.getGoal())
+                .build();
     }
 
 }

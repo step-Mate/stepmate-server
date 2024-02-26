@@ -103,7 +103,8 @@ public class UserService {
                     .user(user)
                     .mission(mission)
                     .isComplete(false)
-                    .currentValue(0)
+                    .stepCurrentValue(0)
+                    .calorieCurrentValue(0)
                     .build();
             userMissions.add(userMission);
         }
@@ -280,7 +281,7 @@ public class UserService {
     }
 
     @Transactional
-    public void saveStep(CustomUserDetails customUserDetails,int steps) {
+    public void saveStep(CustomUserDetails customUserDetails,Integer steps, Integer calories) {
         LocalDate date = LocalDate.now();
         User user = customUserDetails.getUser();
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
@@ -294,16 +295,9 @@ public class UserService {
         }
 
         List<UserMission> userMissionList = userMissionRepository.findAllProgressMissionById(user.getId());
-        for (UserMission userMission : userMissionList) {
 
-            Mission mission = userMission.getMission();
-            if (mission.getMissionType() == MissionType.STEP) {
-                userMission.addCurrentValue(steps);
-                if (userMission.getCurrentValue() >= mission.getGoal()) {
-                    userMission.missionComplete();
-                    user.updateXp(mission.getReward());
-                }
-            }
+        for (UserMission userMission : userMissionList) {
+            userMission.addCurrentValue(steps, calories);
         }
 
         user.updateStep(steps);

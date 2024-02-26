@@ -20,7 +20,9 @@ public class MissionDto {
 
     private Integer goal;
 
-    private Integer currentValue;
+    private Integer stepCurrentValue;
+
+    private Integer calorieCurrentValue;
 
     private boolean isComplete;
 
