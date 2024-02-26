@@ -53,7 +53,6 @@ public class UserMission {
                 .stepCurrentValue(this.stepCurrentValue)
                 .calorieCurrentValue(this.calorieCurrentValue)
                 .isComplete(this.isComplete)
-                .currentValue(this.currentValue)
                 .goal(this.mission.getGoal())
                 .build();
     }
