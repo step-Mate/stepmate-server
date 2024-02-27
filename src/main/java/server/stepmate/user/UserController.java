@@ -74,11 +74,10 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-
-    //미완성
-    /*@GetMapping("/myinfo")
-    public DataResponse getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return responseService.getDataResponse()
-    }*/
+    @Operation(summary = "유저 내 정보 조회",security = @SecurityRequirement(name = "JWT"))
+    @GetMapping("/users/my-info")
+    public UserMyInfoDto getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return userService.getMyInfo(customUserDetails);
+    }
 
 }

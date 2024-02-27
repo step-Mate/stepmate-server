@@ -367,4 +367,15 @@ public class UserService {
         user.changeNickname(nickname);
         userRepository.save(user);
     }
+
+    public UserMyInfoDto getMyInfo(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+
+        return UserMyInfoDto.builder()
+                .nickname(user.getNickname())
+                .title(user.getTitle())
+                .level(user.getLevel())
+                .build();
+
+    }
 }
