@@ -17,13 +17,14 @@ import server.stepmate.mission.UserMissionRepository;
 import server.stepmate.mission.dto.MissionProgressDto;
 import server.stepmate.mission.entity.Mission;
 import server.stepmate.mission.entity.UserMission;
-import server.stepmate.mission.entity.enumtypes.MissionType;
 import server.stepmate.rank.RankRepository;
 import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.dto.*;
 import server.stepmate.user.entity.DailyStep;
+import server.stepmate.user.entity.FriendRequest;
 import server.stepmate.user.entity.Friendship;
 import server.stepmate.user.entity.User;
+import server.stepmate.user.entity.enumtypes.RequestStatus;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -44,6 +45,7 @@ public class UserService {
     private final UserMissionRepository userMissionRepository;
     private final DailyStepRepository dailyStepRepository;
     private final RankRepository rankRepository;
+    private final FriendRequestRepository friendRequestRepository;
     private final FriendshipRepository friendshipRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -330,16 +332,38 @@ public class UserService {
     }
 
     @Transactional
-    public void addFriend(String nickname, CustomUserDetails customUserDetails) {
+    public void friendRequest(String nickname, CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
-        User friend = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomException(CustomExceptionStatus.USER_NOT_VALID));
+        User friend = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.USER_NOT_VALID));
 
-        Friendship friendship = Friendship.builder()
-                .user(user)
-                .friend(friend)
+        if (user.getNickname().equals(friend.getNickname())) {
+            throw new CustomException(CustomExceptionStatus.DUPLICATE_REQUEST);
+        }
+
+        if (friendshipRepository.existsByUserAndFriend(user, friend)) {
+            throw new CustomException(CustomExceptionStatus.USER_ALREADY_EXISTS_FRIEND);
+        }
+
+        if (friendRequestRepository.existsBySenderAndReceiver(user, friend)) {
+            throw new CustomException(CustomExceptionStatus.DUPLICATE_REQUEST);
+        }
+
+        FriendRequest friendRequest = FriendRequest.builder()
+                .receiver(friend)
+                .sender(user)
+                .status(RequestStatus.PENDING)
                 .build();
 
-        friendshipRepository.save(friendship);
+        friendRequestRepository.save(friendRequest);
+
+    }
+
+    public List<FriendRequestDto> getFriendRequests(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+        List<FriendRequest> friendRequestList = friendRequestRepository.findFriendRequestByReceiver(user);
+
+        return friendRequestList.stream().map(FriendRequest::getFriendRequestDto).toList();
     }
 
     public List<FriendDto> getFriendList(CustomUserDetails customUserDetails) {
@@ -352,6 +376,30 @@ public class UserService {
             friendDtoList.add(friendDto);
         }
         return friendDtoList;
+    }
+
+    @Transactional
+    public void acceptFriendRequest(String senderNickname, CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+
+        User friend = userRepository.findByNickname(senderNickname)
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
+
+        Friendship friendship1 = Friendship.builder()
+                .user(user)
+                .friend(friend)
+                .build();
+
+        Friendship friendship2 = Friendship.builder()
+                .user(friend)
+                .friend(user)
+                .build();
+
+        friendshipRepository.save(friendship1);
+        friendshipRepository.save(friendship2);
+
+        friendRequestRepository.deleteBySenderAndReceiver(friend,user);
     }
 
     @Transactional

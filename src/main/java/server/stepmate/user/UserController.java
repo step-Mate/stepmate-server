@@ -51,13 +51,28 @@ public class UserController {
         return userService.retrieveUserInfo(nickname);
     }
 
-    @Operation(summary = "유저 친구 추가 API", security = @SecurityRequirement(name = "JWT"), responses = {
+    @Operation(summary = "유저 친구 요청 API", security = @SecurityRequirement(name = "JWT"), responses = {
             @ApiResponse(responseCode = "200", description = "요청에 성공", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
-            @ApiResponse(responseCode = "404", description = "유효한 사용자가 없습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+            @ApiResponse(responseCode = "404", description = "유효한 사용자가 없습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "408", description = "중복 요청 입니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "460", description = "이미 존재하는 친구 입니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/users/{nickname}/friends")
-    public CommonResponse addFriend(@PathVariable("nickname") String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        userService.addFriend(nickname, customUserDetails);
+    public CommonResponse friendRequest(@PathVariable("nickname") String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.friendRequest(nickname, customUserDetails);
+        return responseService.getSuccessResponse();
+    }
+
+    @Operation(summary = "받은 친구 요청 조회 API", security = @SecurityRequirement(name = "JWT"))
+    @GetMapping("/users/friend-request")
+    public List<FriendRequestDto> getFriendRequests(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return userService.getFriendRequests(customUserDetails);
+    }
+
+    @Operation(summary = "친구 요청 수락 API", security = @SecurityRequirement(name = "JWT"))
+    @PostMapping("/users/friend-request/{nickname}")
+    public CommonResponse acceptFriendRequest(@PathVariable String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.acceptFriendRequest(nickname,customUserDetails);
         return responseService.getSuccessResponse();
     }
 
