@@ -109,6 +109,16 @@ public class User {
                 .build();
     }
 
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeBodyInfo(Integer age, Integer height, Integer weight) {
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+    }
+
     public void changePassword(String password) {
         this.password = password;
     }

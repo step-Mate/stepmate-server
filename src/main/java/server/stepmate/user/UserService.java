@@ -358,4 +358,18 @@ public class UserService {
         }
         return friendDtoList;
     }
+
+    @Transactional
+    public void changeBodyInfo(CustomUserDetails customUserDetails,UserBodyInfoDto dto) {
+        User user = customUserDetails.getUser();
+        user.changeBodyInfo(dto.getAge(), dto.getHeight(), dto.getWeight());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void changeNickname(CustomUserDetails customUserDetails, String nickname) {
+        User user = customUserDetails.getUser();
+        user.changeNickname(nickname);
+        userRepository.save(user);
+    }
 }

@@ -279,4 +279,10 @@ public class UserAccountController {
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "유저 닉네임 변경 API",description = "닉네임 검증 API로 검증 후 유저 닉네임 변경 API 사용",security = @SecurityRequirement(name = "JWT"))
+    @PatchMapping("/users/nickname")
+    public CommonResponse changeNickname(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("nickname") String nickname) {
+        userService.changeNickname(customUserDetails,nickname);
+        return responseService.getSuccessResponse();
+    }
 }

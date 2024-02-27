@@ -67,6 +67,13 @@ public class UserController {
         return userService.getFriendList(customUserDetails);
     }
 
+    @Operation(summary = "유저 신체정보 변경 API",security = @SecurityRequirement(name = "JWT"))
+    @PatchMapping("/users/body-info")
+    public CommonResponse changeBodyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserBodyInfoDto dto) {
+        userService.changeBodyInfo(customUserDetails,dto);
+        return responseService.getSuccessResponse();
+    }
+
 
     //미완성
     /*@GetMapping("/myinfo")
