@@ -30,10 +30,12 @@ public class RankingBoardController {
         return rankService.getUserRank(page);
     }
 
-    @Operation(summary = "랭킹보드 친구 랭킹 조회 API", security = @SecurityRequirement(name = "JWT"))
+    @Operation(summary = "랭킹보드 친구 랭킹 조회 API",
+            description = "page : 1번 부터 시작 25개씩 반환"  ,
+            security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/rank-board/friends")
-    public List<FriendRankDto> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return rankService.getFriendRankList(customUserDetails);
+    public List<FriendRankDto> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails,@RequestParam("page") Integer page) {
+        return rankService.getFriendRankList(customUserDetails,page);
     }
 
     @Operation(summary = "랭킹보드 상단 바 내 정보 조회 API", security = @SecurityRequirement(name = "JWT"))

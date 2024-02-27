@@ -65,9 +65,10 @@ public class RankService {
                 .toList();
     }
 
-    public List<FriendRankDto> getFriendRankList(CustomUserDetails customUserDetails) {
+    public List<FriendRankDto> getFriendRankList(CustomUserDetails customUserDetails,Integer page) {
         User user = customUserDetails.getUser();
-        List<Friendship> friendships = friendshipRepository.findAllByUser(user);
+        List<Friendship> friendships = friendshipRepository.findAllByUser(user.getId());
+
         List<FriendRankDto> friendRankDtoList = new ArrayList<>();
         for (Friendship friendship : friendships) {
             User friend = friendship.getFriend();
@@ -98,7 +99,20 @@ public class RankService {
 
         assignRanks(friendRankDtoList);
 
-        return friendRankDtoList;
+        return getFriendRankListByPage(friendRankDtoList,page);
+    }
+
+    public List<FriendRankDto> getFriendRankListByPage(List<FriendRankDto> list, Integer page) {
+        int pageNum = page - 1;
+        int pageSize = 25;
+        int fromIndex = pageNum * pageSize;
+        int toIndex = Math.min((pageNum + 1) * pageSize, list.size());
+
+        if (fromIndex >= toIndex || fromIndex >= list.size()) {
+            return List.of();
+        }
+
+        return list.subList(fromIndex, toIndex);
     }
 
     private void assignRanks(List<FriendRankDto> friendRankDtoList) {
