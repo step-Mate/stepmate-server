@@ -28,6 +28,8 @@ public enum CustomExceptionStatus {
 
     NOT_AUTHENTICATED_ACCOUNT(false,407,"로그인이 필요합니다."),
 
+    DUPLICATE_REQUEST(false,408,"중복 요청 입니다."),
+
     USER_EMPTY_ID(false,410,"아이디를 입력해 주세요"),
     USER_INVALID_ID(false, 411, "아이디 형식을 확인해 주세요"),
     USER_EXISTS_ID(false,412,"중복된 아이디 입니다."),
@@ -47,6 +49,7 @@ public enum CustomExceptionStatus {
     USER_EMPTY_HEIGHT(false,451,"키를 입력해 주세요"),
     USER_EMPTY_WEIGHT(false,452,"몸무게를 입력해 주세요"),
 
+    USER_ALREADY_EXISTS_FRIEND(false, 460,"이미 존재하는 친구 입니다."),
 
 
     /**
