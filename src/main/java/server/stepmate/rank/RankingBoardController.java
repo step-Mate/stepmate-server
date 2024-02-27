@@ -23,7 +23,7 @@ public class RankingBoardController {
     private final RankService rankService;
 
     @Operation(summary = "랭킹보드 랭킹 조회 API",
-            description = "page : 0번 부터 시작 rankChange : 전일대비 순위 변화률 양수면 순위가 높아지고 음수면 순위가 떨어지는 의미",
+            description = "page : 1번 부터 시작 25개씩 반환 rankChange : 전일대비 순위 변화률 양수면 순위가 높아지고 음수면 순위가 떨어지는 의미",
             security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/rank-board")
     public List<UserRankDto> getRankBoard(@RequestParam("page") Integer page) {
@@ -44,9 +44,8 @@ public class RankingBoardController {
         return rankService.getMyInfoRank(customUserDetails);
     }
 
-/*  테스트용
     @GetMapping("/test")
     public void test() {
         rankService.updateRank();
-    }*/
+    }
 }

@@ -52,7 +52,8 @@ public class RankService {
     }
 
     public List<UserRankDto> getUserRank(Integer page) {
-        PageRequest pageRequest = PageRequest.of(page, 25);
+        int pageNumber = page - 1;
+        PageRequest pageRequest = PageRequest.of(pageNumber, 25);
         Page<Rank> pageRank = rankRepository.findPageRank(pageRequest);
         List<Rank> userRank = pageRank.getContent();
 
