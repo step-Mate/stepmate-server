@@ -403,6 +403,16 @@ public class UserService {
     }
 
     @Transactional
+    public void deniedFriendRequest(String senderNickname, CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+
+        User friend = userRepository.findByNickname(senderNickname)
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
+        friendRequestRepository.deleteBySenderAndReceiver(friend,user);
+    }
+
+    @Transactional
     public void changeBodyInfo(CustomUserDetails customUserDetails,UserBodyInfoDto dto) {
         User user = customUserDetails.getUser();
         user.changeBodyInfo(dto.getAge(), dto.getHeight(), dto.getWeight());

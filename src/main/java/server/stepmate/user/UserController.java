@@ -2,23 +2,16 @@ package server.stepmate.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import server.stepmate.config.response.CommonResponse;
-import server.stepmate.config.response.DataResponse;
 import server.stepmate.config.response.ResponseService;
-import server.stepmate.config.response.exception.ValidationExceptionProvider;
 import server.stepmate.config.security.authentication.CustomUserDetails;
-import server.stepmate.email.EmailService;
 import server.stepmate.user.dto.*;
 import java.util.List;
 
@@ -73,6 +66,13 @@ public class UserController {
     @PostMapping("/users/friend-request/{nickname}")
     public CommonResponse acceptFriendRequest(@PathVariable String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         userService.acceptFriendRequest(nickname,customUserDetails);
+        return responseService.getSuccessResponse();
+    }
+
+    @Operation(summary = "친구 요청 거절 API", security = @SecurityRequirement(name = "JWT"))
+    @PostMapping("/users/friend-request/{nickname}/denied")
+    public CommonResponse deniedFriendRequest(@PathVariable String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.deniedFriendRequest(nickname, customUserDetails);
         return responseService.getSuccessResponse();
     }
 
