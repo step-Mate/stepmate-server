@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import server.stepmate.config.response.CommonResponse;
 import server.stepmate.config.response.DataResponse;
 import server.stepmate.config.response.ResponseService;
+import server.stepmate.config.response.exception.CustomException;
+import server.stepmate.config.response.exception.CustomExceptionStatus;
 import server.stepmate.config.security.authentication.CustomUserDetails;
 import server.stepmate.rank.dto.FriendRankDto;
 import server.stepmate.rank.dto.UserRankDto;
@@ -35,6 +37,7 @@ public class RankingBoardController {
             security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/rank-board/friends")
     public List<FriendRankDto> getFriendRankBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails,@RequestParam("page") Integer page) {
+        if(page<=0) throw new CustomException(CustomExceptionStatus.PAGE_NUMBER_ERROR);
         return rankService.getFriendRankList(customUserDetails,page);
     }
 

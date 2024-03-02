@@ -51,6 +51,8 @@ public enum CustomExceptionStatus {
 
     USER_ALREADY_EXISTS_FRIEND(false, 460,"이미 존재하는 친구 입니다."),
 
+    PAGE_NUMBER_ERROR(false,470,"페이지 번호가 올바르지 않습니다."),
+
 
     /**
      * 500 : 서버 내부 오류
