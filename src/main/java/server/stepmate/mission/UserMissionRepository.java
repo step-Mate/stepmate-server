@@ -21,7 +21,7 @@ public interface UserMissionRepository extends JpaRepository<UserMission, Long> 
     @Modifying(clearAutomatically = true)
     void resetUserMissionTypeMonthly();
 
-    @Query("select u.mission.designation from UserMission u where u.user.id=:id and u.isComplete = true")
+    @Query("select u.mission.designation from UserMission u where u.user.id=:id and u.isComplete = true and u.mission.missionCycle='NONE'")
     List<String> findByUserMissionDesignation(@Param("id") Long id);
 
     @Query("select u from UserMission u where u.user.id = :id")
