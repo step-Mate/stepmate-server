@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.stepmate.mission.entity.enumtypes.MissionType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,14 +21,6 @@ public class MissionDto {
 
     private String contents;
 
-    private Integer goal;
-
-    private Integer stepCurrentValue;
-
-    private Integer calorieCurrentValue;
-
-    private boolean isComplete;
-
-    private MissionType missionType;
+    private List<MissionDetailDto> detail;
 
 }
