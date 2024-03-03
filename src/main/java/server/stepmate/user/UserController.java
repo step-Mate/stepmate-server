@@ -56,6 +56,13 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @Operation(summary = "유저 친구 삭제 API", security = @SecurityRequirement(name = "JWT"))
+    @PostMapping("/users/friends/{nickname}/delete")
+    public CommonResponse deleteFriend(@PathVariable String nickname, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.deleteFriend(nickname,customUserDetails);
+        return responseService.getSuccessResponse();
+    }
+
     @Operation(summary = "받은 친구 요청 조회 API", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/users/friend-request")
     public List<FriendRequestDto> getFriendRequests(@AuthenticationPrincipal CustomUserDetails customUserDetails) {

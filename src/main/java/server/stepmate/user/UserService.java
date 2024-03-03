@@ -413,6 +413,17 @@ public class UserService {
     }
 
     @Transactional
+    public void deleteFriend(String friendNickname, CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
+
+        User friend = userRepository.findByNickname(friendNickname)
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
+        friendshipRepository.deleteByUserAndFriend(user,friend);
+        friendshipRepository.deleteByUserAndFriend(friend,user);
+    }
+
+    @Transactional
     public void changeBodyInfo(CustomUserDetails customUserDetails,UserBodyInfoDto dto) {
         User user = customUserDetails.getUser();
         user.changeBodyInfo(dto.getAge(), dto.getHeight(), dto.getWeight());
