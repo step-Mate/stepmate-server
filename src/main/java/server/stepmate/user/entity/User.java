@@ -61,7 +61,16 @@ public class User {
     @Builder.Default
     private List<DailyStep> dailySteps = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<FriendRequest> sentFriendRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<FriendRequest> receivedFriendRequests = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<Friendship> friendships = new ArrayList<>();
 
