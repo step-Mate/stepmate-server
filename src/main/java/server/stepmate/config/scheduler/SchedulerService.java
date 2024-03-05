@@ -21,6 +21,11 @@ public class SchedulerService {
         userService.resetAllUserTodayStep();
     }
 
+    @Scheduled(cron = "0 5 0 * * ?")
+    public void initDay2() {
+        rankService.updateRank();
+    }
+
     @Scheduled(cron = "0 0 0 ? * MON") // 매주 월요일 자정
     public void initWeek() {
         missionService.resetWeeklyUserMission(); // 주간 미션 초기화
