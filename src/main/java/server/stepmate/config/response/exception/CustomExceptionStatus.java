@@ -44,6 +44,7 @@ public enum CustomExceptionStatus {
     USER_EMPTY_EMAIL(false,440,"이메일을 입력해 주세요"),
     USER_INVALID_EMAIL(false, 441, "이메일 형식을 확인해 주세요"),
     USER_EXISTS_EMAIL(false,442,"중복된 이메일 입니다."),
+    USER_EMAIL_ERROR(false, 443, "이메일을 다시 확인해 주세요"),
 
     USER_EMPTY_AGE(false,450,"나이를 입력해 주세요"),
     USER_EMPTY_HEIGHT(false,451,"키를 입력해 주세요"),
