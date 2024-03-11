@@ -17,6 +17,7 @@ import server.stepmate.config.response.DataResponse;
 import server.stepmate.config.response.ResponseService;
 import server.stepmate.config.response.exception.ValidationExceptionProvider;
 import server.stepmate.config.security.authentication.CustomUserDetails;
+import server.stepmate.rank.RankService;
 import server.stepmate.user.dto.*;
 
 @Slf4j
@@ -26,6 +27,7 @@ public class UserAccountController {
 
     private final UserService userService;
     private final ResponseService responseService;
+    private final RankService rankService;
 
     /*@Operation(summary = "현재 인증된 회원 정보 요청 API", description = "JWT 토큰을 기준으로 인증된 회원정보 반환")
     @GetMapping("/users/auth")
@@ -140,7 +142,9 @@ public class UserAccountController {
     @PostMapping("/sign-up")
     public DataResponse<TokenDto> signUp(@RequestBody @Valid UserAuthDto userAuthDto, Errors errors) {
         if (errors.hasErrors()){ ValidationExceptionProvider.throwValidError(errors);}
-        return responseService.getDataResponse(userService.signUp(userAuthDto));
+        TokenDto data = userService.signUp(userAuthDto);
+        rankService.createNewUserRank(userAuthDto.getNickname());
+        return responseService.getDataResponse(data);
     }
 
     @Operation(summary = "이메일 인증 요청 API", description = "입력한 이메일로 인증코드 발송")

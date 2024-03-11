@@ -30,6 +30,35 @@ public class RankService {
     private final UserService userService;
     private final RankRepository rankRepository;
     private final FriendshipRepository friendshipRepository;
+    private final UserRepository userRepository;
+
+    @Transactional
+    public void createNewUserRank(String nickname) {
+
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
+        Rank lowestRank = rankRepository.findLowestRank()
+                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+
+        Integer ranking = lowestRank.getRanking();
+
+        if (lowestRank.getMonthStep() != 0) {
+            ranking++;
+        }
+
+        Rank newRank = Rank.builder()
+                .nickname(user.getNickname())
+                .level(user.getLevel())
+                .monthStep(user.getMonthStep())
+                .title(user.getTitle())
+                .ranking(ranking)
+                .rankChange(0)
+                .build();
+
+        rankRepository.save(newRank);
+
+    }
 
     @Transactional
     public void updateRank() {
