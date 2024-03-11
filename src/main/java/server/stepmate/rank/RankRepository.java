@@ -18,4 +18,7 @@ public interface RankRepository extends JpaRepository<Rank,Long> {
     Integer findRank(@Param("nickname") String nickname);
 
     Optional<Rank> findByNickname(String nickname);
+
+    @Query("select r from Rank r order by r.monthStep asc, r.ranking desc limit 1")
+    Optional<Rank> findLowestRank();
 }
