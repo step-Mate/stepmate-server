@@ -28,10 +28,19 @@ public class UserController {
     @PostMapping("/users/save-step")
     public CommonResponse saveStep(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestParam(value = "steps") Integer steps,
-            @RequestParam(value = "calories") Integer calories
+            @RequestParam(value = "steps") Integer steps
             ) {
-        userService.saveStep(customUserDetails, steps, calories);
+        userService.saveStep(customUserDetails, steps);
+        return responseService.getSuccessResponse();
+    }
+
+    @Operation(summary = "일일 걸음 저장(자정) API", security = @SecurityRequirement(name = "JWT"))
+    @PostMapping("/users/save-step/midnight")
+    public CommonResponse saveStepMidnight(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam(value = "steps") Integer steps
+    ) {
+        userService.saveStepMidnight(customUserDetails, steps);
         return responseService.getSuccessResponse();
     }
 
