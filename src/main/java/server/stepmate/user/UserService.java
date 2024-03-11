@@ -283,9 +283,15 @@ public class UserService {
     }
 
     @Transactional
-    public void saveStep(CustomUserDetails customUserDetails,Integer steps, Integer calories) {
+    public void saveStep(CustomUserDetails customUserDetails,Integer steps) {
         LocalDate date = LocalDate.now();
         User user = customUserDetails.getUser();
+
+        user.updateStep(steps);
+
+        double calorie = user.getTotalStep() * 0.003;
+        double calories = ((int) (calorie * 100)) / 100.0;
+
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
 
         if (dailyStepByDate.isPresent()) {

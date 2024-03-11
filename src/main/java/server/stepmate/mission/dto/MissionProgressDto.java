@@ -22,7 +22,7 @@ public class MissionProgressDto {
 
     private Integer stepCurrentValue;
 
-    private Integer calorieCurrentValue;
+    private double calorieCurrentValue;
 
     private MissionType missionType;
 

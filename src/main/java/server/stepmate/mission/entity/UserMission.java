@@ -36,7 +36,7 @@ public class UserMission {
 
     private Integer stepCurrentValue;
 
-    private Integer calorieCurrentValue;
+    private double calorieCurrentValue;
 
     private boolean isComplete;
 

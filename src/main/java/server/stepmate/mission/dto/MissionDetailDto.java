@@ -12,7 +12,7 @@ public class MissionDetailDto {
 
     private MissionType missionType;
 
-    private Integer currentValue;
+    private double currentValue;
 
     private Integer goal;
 }
