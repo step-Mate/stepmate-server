@@ -44,9 +44,9 @@ public class UserMission {
         this.isComplete = true;
     }
 
-    public void addCurrentValue(Integer stepValue, Integer calorieValue ) {
+    public void addCurrentValue(Integer stepValue, double calorieValue ) {
         this.stepCurrentValue += stepValue;
-        this.calorieCurrentValue += calorieValue;
+        this.calorieCurrentValue = calorieValue;
     }
 
     public MissionDto getMissionDto() {
