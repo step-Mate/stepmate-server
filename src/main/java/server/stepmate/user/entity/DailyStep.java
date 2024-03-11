@@ -28,11 +28,11 @@ public class DailyStep {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static DailyStep createDailyStep(int step, User user) {
+    public static DailyStep createDailyStep(int step, User user, LocalDate date) {
         return DailyStep.builder()
                 .steps(step)
                 .user(user)
-                .date(LocalDate.now()) //스케줄러를 몇시에 둘지 확정안남.. 확정 후 변경
+                .date(date)
                 .build();
     }
 

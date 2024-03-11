@@ -30,6 +30,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -298,7 +300,7 @@ public class UserService {
             DailyStep dailyStep = dailyStepByDate.get();
             dailyStep.addSteps(steps);
         } else {
-            DailyStep dailyStep = DailyStep.createDailyStep(steps, user);
+            DailyStep dailyStep = DailyStep.createDailyStep(steps, user, date);
             dailyStepRepository.save(dailyStep);
         }
 
@@ -308,7 +310,38 @@ public class UserService {
             userMission.addCurrentValue(steps, calories);
         }
 
+        userRepository.save(user);
+
+        log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")) + " : " +user.getNickname() + " step = " + steps);
+
+    }
+
+    @Transactional
+    public void saveStepMidnight(CustomUserDetails customUserDetails,Integer steps) {
+        LocalDate date = LocalDate.now().minusDays(1);
+        User user = customUserDetails.getUser();
+
         user.updateStep(steps);
+
+        double calorie = user.getTotalStep() * 0.003;
+        double calories = ((int) (calorie * 100)) / 100.0;
+
+        Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
+
+        if (dailyStepByDate.isPresent()) {
+            DailyStep dailyStep = dailyStepByDate.get();
+            dailyStep.addSteps(steps);
+        } else {
+            DailyStep dailyStep = DailyStep.createDailyStep(steps, user, date);
+            dailyStepRepository.save(dailyStep);
+        }
+
+        List<UserMission> userMissionList = userMissionRepository.findAllProgressMissionById(user.getId());
+
+        for (UserMission userMission : userMissionList) {
+            userMission.addCurrentValue(steps, calories);
+        }
+
         userRepository.save(user);
     }
 
