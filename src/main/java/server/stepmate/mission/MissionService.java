@@ -61,10 +61,10 @@ public class MissionService {
     }
 
     @Transactional
-    public void completeMission(String title, CustomUserDetails customUserDetails) {
+    public void completeMission(String designation, CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
-        userMissionRepository.updateUserMissionByMission_Title(user.getId(),title);
-        Mission mission = missionRepository.findMissionByTitle(title).orElseThrow(() -> new CustomException(CustomExceptionStatus.REQUEST_ERROR));
+        userMissionRepository.updateUserMissionByMission_Title(user.getId(),designation);
+        Mission mission = missionRepository.findMissionByDesignation(designation).orElseThrow(() -> new CustomException(CustomExceptionStatus.REQUEST_ERROR));
         user.updateXp(mission.getReward());
         userRepository.save(user);
     }

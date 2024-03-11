@@ -6,5 +6,5 @@ import server.stepmate.mission.entity.Mission;
 import java.util.Optional;
 
 public interface MissionRepository extends JpaRepository<Mission, Long> {
-    Optional<Mission> findMissionByTitle(String title);
+    Optional<Mission> findMissionByDesignation(String designation);
 }

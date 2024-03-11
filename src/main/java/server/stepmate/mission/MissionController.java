@@ -43,8 +43,8 @@ public class MissionController {
 
     @Operation(summary = "미션 완료 API", description = "칭호 이름을 통해 미션 구분", security = @SecurityRequirement(name = "JWT"))
     @PostMapping("/missions/complete")
-    public CommonResponse completeMission(@RequestParam String title, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        missionService.completeMission(title, customUserDetails);
+    public CommonResponse completeMission(@RequestParam String designation, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        missionService.completeMission(designation, customUserDetails);
         return responseService.getSuccessResponse();
     }
 
