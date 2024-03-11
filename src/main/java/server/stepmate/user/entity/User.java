@@ -94,6 +94,7 @@ public class User {
                 .monthStep(0)
                 .todayStep(0)
                 .role(ROLE_USER)
+                .title("뉴비")
                 .build();
     }
 
