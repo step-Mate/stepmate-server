@@ -295,7 +295,7 @@ public class UserService {
         user.updateStep(steps);
         user.updateXp(roundedXp);
 
-        double calorie = user.getTotalStep() * 0.003;
+        double calorie = 3.0 * (3.5 * user.getWeight() * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
         double calories = ((int) (calorie * 100)) / 100.0;
 
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
@@ -331,7 +331,7 @@ public class UserService {
         user.updateStep(steps);
         user.updateXp(roundedXp);
 
-        double calorie = user.getTotalStep() * 0.003;
+        double calorie = 3.0 * (3.5 * user.getWeight() * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
         double calories = ((int) (calorie * 100)) / 100.0;
 
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
