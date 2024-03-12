@@ -49,4 +49,8 @@ public class Rank {
                 .rankChange(this.rankChange)
                 .build();
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

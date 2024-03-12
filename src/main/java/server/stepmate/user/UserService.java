@@ -200,6 +200,7 @@ public class UserService {
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN);
         }
+        rankRepository.deleteByNickname(user.getNickname());
         userRepository.deleteById(user.getId());
     }
 
@@ -483,7 +484,10 @@ public class UserService {
     @Transactional
     public void changeNickname(CustomUserDetails customUserDetails, String nickname) {
         User user = customUserDetails.getUser();
+        Rank rank = rankRepository.findByNickname(user.getNickname()).orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+        rank.changeNickname(nickname);
         user.changeNickname(nickname);
+        rankRepository.save(rank);
         userRepository.save(user);
     }
 

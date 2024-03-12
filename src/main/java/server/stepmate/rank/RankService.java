@@ -13,6 +13,7 @@ import server.stepmate.rank.dto.FriendRankDto;
 import server.stepmate.rank.dto.UserRankDto;
 import server.stepmate.rank.entity.Rank;
 import server.stepmate.user.FriendshipRepository;
+import server.stepmate.user.UserRepository;
 import server.stepmate.user.UserService;
 import server.stepmate.user.entity.Friendship;
 import server.stepmate.user.entity.User;
@@ -58,6 +59,14 @@ public class RankService {
 
         rankRepository.save(newRank);
 
+    }
+
+    @Transactional
+    public void withdrawUserUpdateRank() {
+        List<Rank> userRanks = rankRepository.findAll();
+
+        userService.assignRanks(userRanks);
+        rankRepository.saveAll(userRanks);
     }
 
     @Transactional

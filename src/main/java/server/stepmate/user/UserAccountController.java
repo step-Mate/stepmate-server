@@ -280,6 +280,7 @@ public class UserAccountController {
     @PostMapping("/users/withdraw")
     public CommonResponse withdrawUser(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ValidatePwdDto dto) {
         userService.withdrawUser(customUserDetails, dto);
+        rankService.withdrawUserUpdateRank();
         return responseService.getSuccessResponse();
     }
 
