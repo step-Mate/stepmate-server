@@ -289,7 +289,11 @@ public class UserService {
         LocalDate date = LocalDate.now();
         User user = customUserDetails.getUser();
 
+        double xp = (double) steps / 1000;
+        double roundedXp = ((int)(xp*100))/100.0;
+
         user.updateStep(steps);
+        user.updateXp(roundedXp);
 
         double calorie = user.getTotalStep() * 0.003;
         double calories = ((int) (calorie * 100)) / 100.0;
@@ -321,7 +325,11 @@ public class UserService {
         LocalDate date = LocalDate.now().minusDays(1);
         User user = customUserDetails.getUser();
 
+        double xp = (double) steps / 1000;
+        double roundedXp = ((int)(xp*100))/100.0;
+
         user.updateStep(steps);
+        user.updateXp(roundedXp);
 
         double calorie = user.getTotalStep() * 0.003;
         double calories = ((int) (calorie * 100)) / 100.0;
@@ -343,6 +351,9 @@ public class UserService {
         }
 
         userRepository.save(user);
+
+        log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")) + " : (자정) " +user.getNickname() + " step = " + steps);
+
     }
 
     public UserInfoDto retrieveUserInfo(String nickname) {

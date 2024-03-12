@@ -23,8 +23,6 @@ import static server.stepmate.user.entity.enumtypes.RoleType.*;
 @Table(name = "_user")
 public class User {
 
-    private static final Integer EXPERIENCE_FOR_LEVEL_UP = 100;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,7 +47,7 @@ public class User {
 
     private Integer level;
 
-    private Integer XP;
+    private double XP;
 
     private Integer totalStep;
 
@@ -147,10 +145,22 @@ public class User {
         totalStep += step;
     }
 
-    public void updateXp(Integer xp) {
+    public void updateXp(double xp) {
         this.XP+=xp;
-        this.level += this.XP / EXPERIENCE_FOR_LEVEL_UP;
-        this.XP = this.XP % EXPERIENCE_FOR_LEVEL_UP;
+        checkLevelUp();
+    }
+
+    private void checkLevelUp() {
+        int requiredXp = calculateRequiredXp();
+        if (this.XP >= requiredXp) {
+            this.level++;
+            this.XP -= requiredXp;
+            checkLevelUp();
+        }
+    }
+
+    private int calculateRequiredXp() {
+        return this.level * 10;
     }
 
 }
