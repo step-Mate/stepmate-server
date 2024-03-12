@@ -24,7 +24,7 @@ public class UserAuthDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     @Length(min = 8, max = 16)
-    @Pattern(regexp = "^[a-zA-Z0-9!-*]{8,16}$")
+    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*]{8,16}$")
     private String password;
 
     @NotBlank
