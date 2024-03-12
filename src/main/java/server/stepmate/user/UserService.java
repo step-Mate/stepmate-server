@@ -275,7 +275,7 @@ public class UserService {
     }
 
 
-    private void assignRanks(List<Rank> userRankList) {
+    public void assignRanks(List<Rank> userRankList) {
         int Rank = 1;
         int currentRank = 1;
         int previousMonthStep = Integer.MAX_VALUE;
