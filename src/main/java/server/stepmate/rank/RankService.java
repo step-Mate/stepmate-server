@@ -39,13 +39,14 @@ public class RankService {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
 
-        Rank lowestRank = rankRepository.findLowestRank()
-                .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
-
-        Integer ranking = lowestRank.getRanking();
-
-        if (lowestRank.getMonthStep() != 0) {
-            ranking++;
+        Integer ranking=1;
+        if (rankRepository.count()>0) {
+            Rank lowestRank = rankRepository.findLowestRank()
+                    .orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+            ranking = lowestRank.getRanking();
+            if (lowestRank.getMonthStep() != 0) {
+                ranking++;
+            }
         }
 
         Rank newRank = Rank.builder()
