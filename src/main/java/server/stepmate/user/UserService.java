@@ -2,6 +2,7 @@ package server.stepmate.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,7 @@ public class UserService {
     private final EmailService emailService;
     private final RedisService redisService;
     private final MissionService missionService;
+    private final TextEncryptor textEncryptor;
 
     @Transactional
     public TokenDto signIn(SignInReq req) {
@@ -84,7 +86,14 @@ public class UserService {
         }
 
         userAuthDto.setPassword(passwordEncoder.encode(userAuthDto.getPassword()));
-        User user = User.createUser(userAuthDto);
+
+        BodyInfoEncrytDto bodyInfoEncrytDto = BodyInfoEncrytDto.builder()
+                .age(textEncryptor.encrypt(String.valueOf(userAuthDto.getAge())))
+                .weight(textEncryptor.encrypt(String.valueOf(userAuthDto.getWeight())))
+                .height(textEncryptor.encrypt(String.valueOf(userAuthDto.getHeight())))
+                .build();
+
+        User user = User.createUser(userAuthDto, bodyInfoEncrytDto);
         User save = userRepository.save(createUserMissions(user));
 
         String accessToken = jwtTokenProvider.createAccessToken(userAuthDto.getUserId(), user.getRole());
@@ -296,7 +305,8 @@ public class UserService {
         user.updateStep(steps);
         user.updateXp(roundedXp);
 
-        double calorie = 3.0 * (3.5 * user.getWeight() * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
+        int weight = Integer.parseInt(textEncryptor.decrypt(user.getWeight()));
+        double calorie = 3.0 * (3.5 * weight * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
         double calories = ((int) (calorie * 100)) / 100.0;
 
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
@@ -332,7 +342,8 @@ public class UserService {
         user.updateStep(steps);
         user.updateXp(roundedXp);
 
-        double calorie = 3.0 * (3.5 * user.getWeight() * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
+        int weight = Integer.parseInt(textEncryptor.decrypt(user.getWeight()));
+        double calorie = 3.0 * (3.5 * weight * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
         double calories = ((int) (calorie * 100)) / 100.0;
 
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
@@ -477,7 +488,12 @@ public class UserService {
     @Transactional
     public void changeBodyInfo(CustomUserDetails customUserDetails,UserBodyInfoDto dto) {
         User user = customUserDetails.getUser();
-        user.changeBodyInfo(dto.getAge(), dto.getHeight(), dto.getWeight());
+        BodyInfoEncrytDto bodyInfoEncrytDto = BodyInfoEncrytDto.builder()
+                .age(textEncryptor.encrypt(String.valueOf(dto.getAge())))
+                .weight(textEncryptor.encrypt(String.valueOf(dto.getWeight())))
+                .height(textEncryptor.encrypt(String.valueOf(dto.getHeight())))
+                .build();
+        user.changeBodyInfo(bodyInfoEncrytDto.getAge(), bodyInfoEncrytDto.getHeight(), bodyInfoEncrytDto.getWeight());
         userRepository.save(user);
     }
 

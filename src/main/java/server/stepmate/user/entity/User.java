@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.stepmate.mission.entity.UserMission;
 import server.stepmate.rank.entity.Rank;
+import server.stepmate.user.dto.BodyInfoEncrytDto;
 import server.stepmate.user.dto.UserAuthDto;
 import server.stepmate.user.entity.enumtypes.RoleType;
 
@@ -36,11 +37,11 @@ public class User {
 
     private String nickname;
 
-    private Integer age;
+    private String age;
 
-    private Integer height;
+    private String height;
 
-    private Integer weight;
+    private String weight;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
@@ -77,15 +78,15 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserMission> userMissions;
 
-    public static User createUser(UserAuthDto dto) {
+    public static User createUser(UserAuthDto dto, BodyInfoEncrytDto bodyInfoEncrytDto) {
         return User.builder()
                 .userId(dto.getUserId())
                 .password(dto.getPassword())
                 .nickname(dto.getNickname())
                 .email(dto.getEmail())
-                .age(dto.getAge())
-                .height(dto.getHeight())
-                .weight(dto.getWeight())
+                .age(bodyInfoEncrytDto.getAge())
+                .height(bodyInfoEncrytDto.getHeight())
+                .weight(bodyInfoEncrytDto.getWeight())
                 .level(1)
                 .XP(0)
                 .totalStep(0)
@@ -93,18 +94,6 @@ public class User {
                 .todayStep(0)
                 .role(ROLE_USER)
                 .title("뉴비")
-                .build();
-    }
-
-    public UserAuthDto getUserAuthDto() {
-        return UserAuthDto.builder()
-                .id(this.id)
-                .userId(this.userId)
-                .nickname(this.nickname)
-                .email(this.email)
-                .age(this.age)
-                .height(this.height)
-                .weight(this.weight)
                 .build();
     }
 
@@ -121,7 +110,7 @@ public class User {
         this.nickname = nickname;
     }
 
-    public void changeBodyInfo(Integer age, Integer height, Integer weight) {
+    public void changeBodyInfo(String age, String height, String weight) {
         this.age = age;
         this.height = height;
         this.weight = weight;
