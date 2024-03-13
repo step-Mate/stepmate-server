@@ -24,6 +24,10 @@ public interface UserMissionRepository extends JpaRepository<UserMission, Long> 
     @Query("select u.mission.designation from UserMission u where u.user.id=:id and u.isComplete = true and u.mission.missionCycle='NONE'")
     List<String> findByUserMissionDesignation(@Param("id") Long id);
 
+    @Query("select u.mission.designation from UserMission u where u.user.id=:id and u.isComplete = true and u.mission.missionCycle='WEEKLY' and u.mission.missionType='STEP'")
+    List<String> findByUserMissionWeeklyDesignation(@Param("id") Long id);
+
+
     @Query("select u from UserMission u where u.user.id = :id and u.mission.missionCycle = 'NONE'")
     List<UserMission> findAllNoneMissionById(@Param("id") Long id);
 

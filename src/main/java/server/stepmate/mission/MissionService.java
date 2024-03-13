@@ -79,6 +79,9 @@ public class MissionService {
     public List<MissionDesignationDto> getUserDesignations(CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
         List<String> titleList = userMissionRepository.findByUserMissionDesignation(user.getId());
+        List<String> titleWeeklyList = userMissionRepository.findByUserMissionWeeklyDesignation(user.getId());
+
+        titleList.addAll(titleWeeklyList);
         return getMissionTitleDtoList(titleList);
     }
 
