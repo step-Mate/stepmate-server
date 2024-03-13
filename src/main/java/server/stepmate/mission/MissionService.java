@@ -104,8 +104,10 @@ public class MissionService {
     public void completeMission(String designation, CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
         userMissionRepository.updateUserMissionByMission_Title(user.getId(),designation);
-        Mission mission = missionRepository.findMissionByDesignation(designation).orElseThrow(() -> new CustomException(CustomExceptionStatus.REQUEST_ERROR));
-        user.updateXp(mission.getReward());
+        List<Mission> missions = missionRepository.findMissionByDesignation(designation);
+        for (Mission mission : missions) {
+            user.updateXp(mission.getReward());
+        }
         userRepository.save(user);
     }
 
