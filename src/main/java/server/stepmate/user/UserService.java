@@ -61,6 +61,7 @@ public class UserService {
     public TokenDto signIn(SignInReq req) {
         User user = userRepository.findByUserId(req.getUserId())
                 .orElseThrow(() -> new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN));
+
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN);
         }
@@ -68,30 +69,24 @@ public class UserService {
         String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRole());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
 
-        redisService.setValues(user.getUserId(), refreshToken,Duration.ofMillis(JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME));
+        redisSaveRefreshToken(user, refreshToken);
 
-        TokenDto dto = new TokenDto(refreshToken, accessToken);
-        return dto;
+        return new TokenDto(refreshToken, accessToken);
+    }
+
+    private void redisSaveRefreshToken(User user, String refreshToken) {
+        Duration refreshTokenExpireTime = Duration.ofMillis(JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME);
+        redisService.setValues(user.getUserId(), refreshToken, refreshTokenExpireTime);
     }
 
     @Transactional
     public TokenDto signUp(UserAuthDto userAuthDto) {
-        if (userRepository.findByUserId(userAuthDto.getUserId()).isPresent()) {
-            throw new CustomException(CustomExceptionStatus.USER_EXISTS_ID);
-        }
-        if (userAuthDto.getNickname() != null) {
-            if (userRepository.findByNickname(userAuthDto.getNickname()).isPresent()) {
-                throw new CustomException(CustomExceptionStatus.USER_EXISTS_NICKNAME);
-            }
-        }
+        checkDuplicatedUserId(userAuthDto.getUserId());
+        checkDuplicatedNickname(userAuthDto.getNickname());
 
         userAuthDto.setPassword(passwordEncoder.encode(userAuthDto.getPassword()));
 
-        BodyInfoEncrytDto bodyInfoEncrytDto = BodyInfoEncrytDto.builder()
-                .age(textEncryptor.encrypt(String.valueOf(userAuthDto.getAge())))
-                .weight(textEncryptor.encrypt(String.valueOf(userAuthDto.getWeight())))
-                .height(textEncryptor.encrypt(String.valueOf(userAuthDto.getHeight())))
-                .build();
+        BodyInfoEncrytDto bodyInfoEncrytDto = getBodyInfoEncrytDto(userAuthDto);
 
         User user = User.createUser(userAuthDto, bodyInfoEncrytDto);
         User save = userRepository.save(createUserMissions(user));
@@ -99,10 +94,17 @@ public class UserService {
         String accessToken = jwtTokenProvider.createAccessToken(userAuthDto.getUserId(), user.getRole());
         String refreshToken = jwtTokenProvider.createRefreshToken(userAuthDto.getUserId());
 
-        redisService.setValues(userAuthDto.getUserId(),refreshToken,Duration.ofMillis(JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME));
+        redisSaveRefreshToken(user, refreshToken);
 
-        TokenDto dto = new TokenDto(refreshToken, accessToken);
-        return dto;
+        return new TokenDto(refreshToken, accessToken);
+    }
+
+    private BodyInfoEncrytDto getBodyInfoEncrytDto(UserAuthDto userAuthDto) {
+        return BodyInfoEncrytDto.builder()
+                .age(textEncryptor.encrypt(String.valueOf(userAuthDto.getAge())))
+                .weight(textEncryptor.encrypt(String.valueOf(userAuthDto.getWeight())))
+                .height(textEncryptor.encrypt(String.valueOf(userAuthDto.getHeight())))
+                .build();
     }
 
     @Transactional
