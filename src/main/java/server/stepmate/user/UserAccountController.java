@@ -87,9 +87,9 @@ public class UserAccountController {
                     })
     })
     @PostMapping("/sign-in")
-    public DataResponse<TokenDto> signIn(@RequestBody @Valid SignInReq req, Errors errors) {
+    public DataResponse<TokenDto> signIn(@RequestBody @Valid SignInDto dto, Errors errors) {
         if(errors.hasErrors()) ValidationExceptionProvider.throwValidError(errors);
-        return responseService.getDataResponse(userService.signIn(req));
+        return responseService.getDataResponse(userService.signIn(dto));
     }
 
     @Operation(summary = "회원가입 API", description = "형식에 맞는 DTO로 요청 -> 회원가입 성공시 accessToken 반환")

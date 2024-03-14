@@ -58,11 +58,11 @@ public class UserService {
     private final TextEncryptor textEncryptor;
 
     @Transactional
-    public TokenDto signIn(SignInReq req) {
-        User user = userRepository.findByUserId(req.getUserId())
+    public TokenDto signIn(SignInDto dto) {
+        User user = userRepository.findByUserId(dto.getUserId())
                 .orElseThrow(() -> new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN));
 
-        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new CustomException(CustomExceptionStatus.FAILED_TO_LOGIN);
         }
 

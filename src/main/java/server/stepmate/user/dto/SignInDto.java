@@ -1,5 +1,6 @@
 package server.stepmate.user.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignInRes {
+public class SignInDto {
 
-    private Long id;
-
+    @NotBlank
     private String userId;
 
-    private String jwt;
+    @NotBlank
+    private String password;
 
 }
