@@ -308,8 +308,6 @@ public class UserService {
         user.updateXp(roundedXp);
 
         int weight = Integer.parseInt(textEncryptor.decrypt(user.getWeight()));
-        double calorie = 3.0 * (3.5 * weight * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
-        double calories = ((int) (calorie * 100)) / 100.0;
 
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
 
@@ -324,7 +322,7 @@ public class UserService {
         List<UserMission> userMissionList = userMissionRepository.findAllProgressMissionById(user.getId());
 
         for (UserMission userMission : userMissionList) {
-            userMission.addCurrentValue(steps, calories);
+            userMission.addCurrentValue(steps, weight);
         }
 
         userRepository.save(user);
@@ -345,8 +343,6 @@ public class UserService {
         user.updateXp(roundedXp);
 
         int weight = Integer.parseInt(textEncryptor.decrypt(user.getWeight()));
-        double calorie = 3.0 * (3.5 * weight * user.getTotalStep() * 0.0008 * 15) * 5 / 1000;
-        double calories = ((int) (calorie * 100)) / 100.0;
 
         Optional<DailyStep> dailyStepByDate = dailyStepRepository.findDailyStepByDate(user.getId(), date);
 
@@ -361,7 +357,7 @@ public class UserService {
         List<UserMission> userMissionList = userMissionRepository.findAllProgressMissionById(user.getId());
 
         for (UserMission userMission : userMissionList) {
-            userMission.addCurrentValue(steps, calories);
+            userMission.addCurrentValue(steps, weight);
         }
 
         userRepository.save(user);

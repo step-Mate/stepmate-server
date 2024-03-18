@@ -44,10 +44,17 @@ public class UserMission {
         this.isComplete = true;
     }
 
-    public void addCurrentValue(Integer stepValue, double calorieValue ) {
+    public void addCurrentValue(Integer stepValue, double weight ) {
         this.stepCurrentValue += stepValue;
-        this.calorieCurrentValue = calorieValue;
+        this.calorieCurrentValue = getCalories(weight);
     }
+
+    private double getCalories(double weight) {
+        double calorie = 3.0 * (3.5 * weight * this.stepCurrentValue * 0.0008 * 15) * 5 / 1000;
+        double calories = ((int) (calorie * 100)) / 100.0;
+        return calories;
+    }
+
 
     public MissionDto getMissionDto() {
 
