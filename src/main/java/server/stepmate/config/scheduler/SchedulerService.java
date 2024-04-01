@@ -33,7 +33,7 @@ public class SchedulerService {
         log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")) + " : " + "initWeek 실행");
     }
 
-    @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 자정
+    @Scheduled(cron = "1 0 0 1 * ?") // 매월 1일 자정
     public void initMonth() {
         userService.resetAllDailyStep();
         userService.resetAllUserMonthStep(); // 월 걸음수 초기화
