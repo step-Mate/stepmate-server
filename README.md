@@ -39,6 +39,7 @@
  
 ## 시스템 구성도
 
-![drawio](..%2F%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%84%B1%EB%8F%84.drawio%20%281%29.png)
+![시스템 구성도 drawio (1)](https://github.com/step-Mate/stepmate-server/assets/75068957/523d7faa-4400-477b-ad33-676987c6760a)
+
 
 ## ERD
