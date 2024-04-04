@@ -43,3 +43,5 @@
 
 
 ## ERD
+
+![ERD](https://github.com/step-Mate/stepmate-server/assets/75068957/19ca5965-950d-462d-a9e0-efbbb5b7ccf7)
