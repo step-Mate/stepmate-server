@@ -38,3 +38,7 @@
   - gradle
  
 ## 시스템 구성도
+
+![drawio](..%2F%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%84%B1%EB%8F%84.drawio%20%281%29.png)
+
+## ERD
