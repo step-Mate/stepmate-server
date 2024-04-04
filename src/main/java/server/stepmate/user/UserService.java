@@ -230,7 +230,11 @@ public class UserService {
     @Transactional
     public void selectDesignation(String designation, CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
+        Rank rank = rankRepository.findByNickname(user.getNickname()).orElseThrow(() -> new CustomException(CustomExceptionStatus.RESPONSE_ERROR));
+        rank.changeDesignation(designation);
         user.changeDesignation(designation);
+
+        rankRepository.save(rank);
         userRepository.save(user);
     }
 

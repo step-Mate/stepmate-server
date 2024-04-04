@@ -53,4 +53,8 @@ public class Rank {
     public void changeNickname(String nickname) {
         this.nickname = nickname;
     }
+    public void changeDesignation(String designation) {
+        this.title = designation;
+    }
+
 }
