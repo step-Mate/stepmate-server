@@ -9,7 +9,7 @@
 
 > stepmate Back-End Server Project
 
-<div style="text-align: center">
+<div align=center>
   <img width="200" alt="StepMate Logo" src="https://github.com/step-Mate/stepmate-server/assets/75068957/e5c64694-3adb-4b53-a33e-0a2c7e3306f8">
 </div>
 
