@@ -20,7 +20,6 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
         Optional<User> optional = userRepository.findByUserId(userId);
-        if(optional.isEmpty()) return null;
-        else return new CustomUserDetails(optional.get());
+        return optional.map(CustomUserDetails::new).orElse(null);
     }
 }
