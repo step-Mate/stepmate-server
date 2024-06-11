@@ -110,7 +110,6 @@ public class UserService {
     @Transactional
     public User createUserMissions(User user) {
         List<Mission> allMissions = missionRepository.findAll();
-        System.out.println("allMissions = " + allMissions);
         List<UserMission> userMissions = new ArrayList<>();
 
         for (Mission mission : allMissions) {
@@ -123,7 +122,6 @@ public class UserService {
                     .build();
             userMissions.add(userMission);
         }
-        System.out.println("userMissions = " + userMissions);
 
         user.initUserMissions(userMissions);
         return user;
@@ -262,8 +260,7 @@ public class UserService {
         }
         String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRole());
 
-        AccessTokenDto accessTokenDto = new AccessTokenDto(accessToken);
-        return accessTokenDto;
+        return new AccessTokenDto(accessToken);
     }
 
     public List<Rank> getUserRanks() {
@@ -306,7 +303,7 @@ public class UserService {
         User user = customUserDetails.getUser();
 
         double xp = (double) steps / 1000;
-        double roundedXp = ((int)(xp*100))/100.0;
+        double roundedXp = ((int) (xp * 100)) / 100.0;
 
         user.updateStep(steps);
         user.updateXp(roundedXp);
@@ -341,7 +338,7 @@ public class UserService {
         User user = customUserDetails.getUser();
 
         double xp = (double) steps / 1000;
-        double roundedXp = ((int)(xp*100))/100.0;
+        double roundedXp = ((int) (xp * 100)) / 100.0;
 
         user.updateStep(steps);
         user.updateXp(roundedXp);
